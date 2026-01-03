@@ -1,0 +1,144 @@
+'use client';
+
+import { useAppContext } from '@/context/context';
+import { useEffect, useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
+import NoticeCard from '@/components/noticecard';
+import { FaUserCircle } from 'react-icons/fa';
+
+export default function ProfilePage() {
+	const { userContext, setUserContext } = useAppContext();
+
+	const [message, setMessage] = useState('');
+	const [error, setError] = useState(false);
+
+	const [name, setName] = useState(userContext.name);
+	const [email, setEmail] = useState(userContext.email);
+	const [password, setPassword] = useState('');
+	const [showPassword, setShowPassword] = useState(false);
+	const [editing, setEditing] = useState(false);
+	const [loading, setLoading] = useState(false);
+
+	useEffect(() => {
+		setName(userContext.name);
+		setEmail(userContext.email);
+	}, [userContext]);
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		setLoading(true);
+		try {
+			const res = await fetch('/api/v1/user', {
+				method: 'PATCH',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ id: userContext.id, name, email, password }),
+			});
+			if (!res.ok) throw new Error(await res.text());
+			const data = await res.json();
+			if (data.success) {
+				setUserContext({ ...userContext, name, email });
+				setEditing(false);
+				setError(false);
+				setMessage('Profile updated successfully');
+			} else {
+				console.error('Update failed:', data);
+				setError(true);
+				setMessage('Profile updated fail');
+			}
+		} catch (err) {
+			console.error('Error updating user:', err);
+			setError(true);
+			setMessage('Something went wrong!');
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	return (
+		<>
+			{message !== '' && <NoticeCard isError={error} notice={message} />}
+			<div className="p-4">
+				<h1 className="text-center text-3xl font-semibold text-theme bg-light mb-4 rounded-sm shadow border-t border-highlight py-3">
+					Profile
+				</h1>
+
+				<section className="flex justify-center items-center min-h-100 mt-3">
+					<div className="shadow rounded-sm bg-light overflow-hidden flex flex-col items-center w-full max-w-md">
+						<div className="w-full flex justify-center items-center bg-light pt-6">
+							<FaUserCircle className="text-main text-7xl" />
+						</div>
+
+						<div className="px-4 py-4 w-full">
+							{editing ? (
+								<form onSubmit={handleSubmit} className="flex flex-col gap-3">
+									<input
+										type="text"
+										value={name}
+										onChange={(e) => setName(e.target.value)}
+										className="border border-myBorder rounded px-3 py-2"
+										placeholder="Name"
+										required
+									/>
+									<input
+										type="email"
+										value={email}
+										onChange={(e) => setEmail(e.target.value)}
+										className="border border-myBorder rounded px-3 py-2"
+										placeholder="Email"
+										required
+									/>
+									<div className="relative mb-4">
+										<input
+											type={showPassword ? 'text' : 'password'}
+											value={password}
+											onChange={(e) => setPassword(e.target.value)}
+											autoComplete="current-password"
+											placeholder="Password"
+											className="border border-myBorder rounded px-3 py-2 w-full"
+										/>
+										<button
+											type="button"
+											onClick={() => setShowPassword(!showPassword)}
+											className="absolute right-2 top-1/2 -translate-y-1/2 text-muted"
+											tabIndex={-1}
+											aria-label="Toggle password visibility"
+										>
+											{showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+										</button>
+									</div>
+									<div className="flex justify-between gap-2">
+										<button
+											type="submit"
+											className="bg-theme text-white px-4 py-2 rounded"
+											disabled={loading}
+										>
+											{loading ? 'Updating...' : 'Save'}
+										</button>
+										<button
+											type="button"
+											className="bg-gray-300 text-black px-4 py-2 rounded"
+											onClick={() => setEditing(false)}
+										>
+											Cancel
+										</button>
+									</div>
+								</form>
+							) : (
+								<div className="text-center">
+									<p className="text-xl font-medium text-main mb-1">{userContext.name}</p>
+									<p className="text-sm text-main/50 mb-3">{userContext.email}</p>
+									<button
+										className="bg-theme text-white px-4 py-2 rounded"
+										onClick={() => setEditing(true)}
+									>
+										Edit Profile
+									</button>
+								</div>
+							)}
+						</div>
+					</div>
+				</section>
+			</div>
+		</>
+	);
+}

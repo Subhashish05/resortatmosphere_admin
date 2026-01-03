@@ -1,0 +1,141 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+	--bg-dark: hsl(233, 0%, 90%);
+	--bg-mid: hsl(0, 0%, 95%);
+	--bg-light: hsl(0, 0%, 98%);
+
+	--main: hsl(0, 0%, 10%);
+	--muted: hsl(0, 0%, 40%);
+
+	--theme: hsl(41, 57%, 50%);
+	--nav-bg: hsl(0, 0%, 99%);
+	--sub_menu: hsl(0, 0%, 93%);
+	
+	--border: hsla(0, 0%, 0%, 0.2);
+	--shadow: 0px 2px 2px hsla(0, 0%, 0%, 0.07), 0px 6px 6px hsla(0, 0%, 0%, 0.15);
+	--highlight: hsl(0, 0%, 100%);
+}
+
+:root:has(body.dark) {
+	--bg-dark: hsl(0, 0%, 15%);
+	--bg-mid: hsl(0, 0%, 20%);
+	--bg-light: hsl(0, 0%, 25%);
+
+	--main: hsl(0, 0%, 95%);
+	--muted: hsl(0, 0%, 70%);
+
+	--theme: hsl(41, 57%, 50%);;
+	--nav-bg: hsl(233, 90%, 10%);
+	--sub_menu: hsl(0, 0%, 12%);
+	
+	--border: hsla(0, 0%, 100%, 0.2);
+	--shadow: 0px 2px 2px hsla(0, 0%, 0%, 0.1), 0px 6px 6px hsla(0, 0%, 0%, 0.2);
+	--highlight: hsla(0, 0%, 50%,0.2);
+}
+
+@theme inline {
+	--color-dark: var(--bg-dark);
+	--color-mid: var(--bg-mid);
+	--color-light: var(--bg-light);
+
+	--color-main: var(--main);
+	--color-muted: var(--muted);
+
+	--color-theme: var(--theme);
+
+	--color-myBorder: var(--border);
+	--color-shadow: var(--shadow);
+	--color-highlight: var(--highlight);
+
+	--font-head: var(--font-head);
+	--font-body: var(--font-body);
+}
+html, body {
+  margin: 0;
+  padding: 0;
+}
+body {
+	background-color: var(--bg-dark);
+	color: var(--main);
+	font-family: var(--font-body), Helvetica, sans-serif;
+	font-weight: 400;
+	display: flex;
+	flex-wrap: wrap;
+}
+nav + main{
+	margin: 8px 0;
+	width: 100%;
+	transition: all 500ms ease;
+}
+@media(width > 480px){
+	nav + main{
+		margin: 8px 0 8px 68px;
+		width: calc(100vw - 78px);
+	}
+}
+nav.collapsed + main{
+	margin: 8px 0px;
+	width: 100%;
+}
+a {
+	cursor: pointer;
+}
+h1,
+h2,
+h3 {
+	font-family: var(--font-head);
+}
+button {
+	cursor: pointer;
+	outline: none;
+	scroll-behavior: smooth;
+}
+.shadow {
+	box-shadow: var(--shadow);
+}
+.login_container {
+	background-color: var(--bg-dark);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+}
+.profile {
+	position: fixed;
+	top: 3rem;
+	right: -14rem;
+	background-color: var(--color-mid);
+	width: 13rem;
+	max-height: calc(100vh - 5rem);
+	overflow-y: auto;
+	border: var(--border-card);
+	border-top: 1px solid var(--highlight);
+	box-shadow: var(--shadow);
+	border-radius: 0.25rem;
+	overflow: hidden;
+	z-index: 30;
+}
+.profile.show {
+	right: 0.5rem;
+}
+.chart_candle *{
+	border-color: currentColor;
+	color: currentColor;
+}
+.tip_text{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	position: relative;
+}
+.tip_text::after{
+	content: ':';
+	position: absolute;
+	top: 0;
+	color: hsl(0, 0%, 50%);
+	left: 50%;
+	transform: translateX(-50%);
+}
