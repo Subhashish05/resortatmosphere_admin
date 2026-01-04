@@ -1,4 +1,3 @@
-import 'bootstrap-icons/font/bootstrap-icons.css';
 import '@/styles/globals.css';
 import { ContextProvider } from '@/context/context';
 import Header from '@/shared/header';
@@ -6,10 +5,11 @@ import Navigation from '@/shared/navigation';
 import { cookies } from 'next/headers';
 import { Roboto, Inter } from '@/lib/fonts';
 import Script from 'next/script';
+import Link from 'next/link';
 
 export default async function RootLayout({ children }) {
 	const cookieStore = await cookies();
-	const userCookie = cookieStore.get('tool_auth_token');
+	const userCookie = cookieStore.get('atmosphere_auth_token');
 	const isLoggedIn = Boolean(userCookie);
 	const theme = cookieStore.get('dark');
 	const isDark = theme !== undefined ? theme.value : 'false';
@@ -34,14 +34,26 @@ export default async function RootLayout({ children }) {
 							<Navigation />
 							<main className="bg-mid min-h-[calc(100vh-96px)]">{children}</main>
 							<footer className="bg-mid w-full">
-								<div className="text-[10px] md:text-xs text-muted text-center py-2">
-									&copy; {new Date().getFullYear()} Bullion Bulls. All rights reserved.
+								<div className="text-[10px] text-muted text-center">
+									<span>
+										&copy; {new Date().getFullYear()} Resort Atmosphere. All rights reserved.
+									</span>
+									<span className="block md:inline md:ml-1">
+										Developed by{' '}
+										<Link
+											href="https://spfreelancer.com"
+											target="_blank"
+											rel="noopener noreferrer"
+											className="hover:underline font-medium"
+										>
+											SP FREELANCER
+										</Link>
+									</span>
 								</div>
 							</footer>
 						</>
 					)}
-					{
-						process.env.NODE_ENV === 'production' && 
+					{process.env.NODE_ENV === 'production' && (
 						<Script id="disable-inspect" strategy="beforeInteractive">
 							{`
 								document.addEventListener("contextmenu", e => e.preventDefault());
@@ -54,7 +66,7 @@ export default async function RootLayout({ children }) {
 								});
 							`}
 						</Script>
-					}
+					)}
 				</body>
 			</ContextProvider>
 		</html>

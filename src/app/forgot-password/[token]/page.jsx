@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react'; // install lucide-react if not already: npm i lucide-react
+import {LuEye, LuEyeOff} from 'react-icons/lu';
 
 export default function ResetPasswordPage() {
     const router = useRouter();
@@ -96,7 +96,7 @@ export default function ResetPasswordPage() {
 								onClick={() => setShowPassword((prev) => !prev)}
 								className="absolute right-3 top-10 text-mute"
 							>
-								{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+								{showPassword ? <LuEyeOff size={18} /> : <LuEye size={18} />}
 							</button>
 						</label>
 
@@ -115,7 +115,7 @@ export default function ResetPasswordPage() {
 								onClick={() => setShowConfirm((prev) => !prev)}
 								className="absolute right-3 top-10 text-mute"
 							>
-								{showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+								{showConfirm ? <LuEyeOff size={18} /> : <LuEye size={18} />}
 							</button>
 						</label>
 

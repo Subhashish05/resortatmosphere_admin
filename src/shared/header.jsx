@@ -5,8 +5,8 @@ import { useAppContext } from '@/context/context';
 import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 import { BiMoon, BiSun, BiUser } from 'react-icons/bi';
-import { LuPanelLeftClose, LuPanelLeftOpen } from 'react-icons/lu';
-import { LogOut } from 'lucide-react';
+import { LuPanelLeftClose, LuPanelLeftOpen, LuLogOut } from 'react-icons/lu';
+import Image from 'next/image';
 
 export default function Header() {
 	const { darkmode, setDarkmode, userContext, setUserContext, isCollapse, setIsCollapse } = useAppContext();
@@ -34,7 +34,7 @@ export default function Header() {
 			sessionStorage.removeItem('user');
 
 			// remove non-HttpOnly cookie if present (no-op for HttpOnly)
-			Cookies.remove('tool_auth_token');
+			Cookies.remove('atmosphere_auth_token');
 			window.location.reload();
 		} catch (err) {
 			console.error('Logout error:', err);
@@ -75,7 +75,9 @@ export default function Header() {
 					/>
 				)}
 			</div>
-			<div className='text-theme text-2xl flex items-center'> <img src="/logo.webp" alt="logo" className='h-12 w-auto mr-1.5' /></div>
+			<div className="text-theme text-2xl flex items-center">
+				<Image src="/img/logo.png" alt="logo" width={64} height={64} className="h-12 w-auto mr-1.5" />
+			</div>
 			{userContext.email == null ? (
 				<>
 					<div className="relative header_btn">
@@ -95,11 +97,7 @@ export default function Header() {
 							onClick={toggleProfile}
 							className="size-8 rounded-full bg-theme text-white text-xl leading-5 flex justify-center items-center overflow-hidden shadow"
 						>
-							{userContext.image == null ? (
-								<span>{userContext?.name.slice(0, 1).toUpperCase()}</span>
-							) : (
-								<img src="userContext.image" alt="user image" className="h-full w-full object-cover" />
-							)}
+							<span>{userContext?.name.slice(0, 1).toUpperCase()}</span>
 						</button>
 						<div className="profile" ref={profile}>
 							<div className="bg-light flex items-center justify-between p-2 text-base">
@@ -128,7 +126,7 @@ export default function Header() {
 									className="border-t border-myBorder hover:bg-light py-2 px-4 cursor-pointer"
 									onClick={handleLogout}
 								>
-									<LogOut className="inline me-2 size-4" /> Logout
+									<LuLogOut className="inline me-2 size-4" /> Logout
 								</li>
 							</ul>
 						</div>

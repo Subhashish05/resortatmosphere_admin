@@ -12,7 +12,6 @@ const nullData = {
 	email: null,
 	name: null,
 	password: null,
-	image: null,
 };
 export const ContextProvider = ({ children }) => {
 	const pathname = usePathname();
@@ -41,7 +40,7 @@ export const ContextProvider = ({ children }) => {
 		//window width assess
 		setWindowWidth(window.innerWidth);
 
-		(window.innerWidth <= 480) && setIsCollapse(true);
+		window.innerWidth <= 480 && setIsCollapse(true);
 		const savedUser = sessionStorage.getItem('user');
 
 		//user data assess
@@ -54,7 +53,7 @@ export const ContextProvider = ({ children }) => {
 
 					if (!res.ok) {
 						if (
-							!Boolean(Cookies.get('tool_auth_token')) &&
+							!Boolean(Cookies.get('atmosphere_auth_token')) &&
 							pathname !== '/login' &&
 							pathname !== '/forgot-password'
 						) {
@@ -63,7 +62,7 @@ export const ContextProvider = ({ children }) => {
 								credentials: 'include',
 							});
 							sessionStorage.removeItem('user');
-							Cookies.remove('tool_auth_token');
+							Cookies.remove('atmosphere_auth_token');
 							window.location.reload();
 						}
 						setUserContext(nullData);

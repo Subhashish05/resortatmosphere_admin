@@ -2,9 +2,9 @@
 
 import { useAppContext } from '@/context/context';
 import { useEffect, useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
 import NoticeCard from '@/components/noticecard';
 import { FaUserCircle } from 'react-icons/fa';
+import {LuEye, LuEyeOff} from 'react-icons/lu';
 
 export default function ProfilePage() {
 	const { userContext, setUserContext } = useAppContext();
@@ -14,7 +14,7 @@ export default function ProfilePage() {
 
 	const [name, setName] = useState(userContext.name);
 	const [email, setEmail] = useState(userContext.email);
-	const [password, setPassword] = useState('');
+	const [password, setPassword] = useState(userContext.password);
 	const [showPassword, setShowPassword] = useState(false);
 	const [editing, setEditing] = useState(false);
 	const [loading, setLoading] = useState(false);
@@ -22,6 +22,7 @@ export default function ProfilePage() {
 	useEffect(() => {
 		setName(userContext.name);
 		setEmail(userContext.email);
+		setPassword(userContext.password);
 	}, [userContext]);
 
 	const handleSubmit = async (e) => {
@@ -36,10 +37,11 @@ export default function ProfilePage() {
 			if (!res.ok) throw new Error(await res.text());
 			const data = await res.json();
 			if (data.success) {
-				setUserContext({ ...userContext, name, email });
+				setUserContext({ ...userContext, name, email, password });
 				setEditing(false);
 				setError(false);
 				setMessage('Profile updated successfully');
+				sessionStorage.setItem('user', JSON.stringify({ ...userContext, name, email, password }));
 			} else {
 				console.error('Update failed:', data);
 				setError(true);
@@ -103,7 +105,7 @@ export default function ProfilePage() {
 											tabIndex={-1}
 											aria-label="Toggle password visibility"
 										>
-											{showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+											{showPassword ? <LuEyeOff size={20} /> : <LuEye size={20} />}
 										</button>
 									</div>
 									<div className="flex justify-between gap-2">

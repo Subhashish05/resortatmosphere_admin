@@ -7,7 +7,7 @@ import { AiOutlineControl } from 'react-icons/ai';
 import { CgWebsite } from 'react-icons/cg';
 import { FaPercent } from 'react-icons/fa';
 import { LuChartCandlestick, LuHouse } from 'react-icons/lu';
-import { MdOutlineCandlestickChart } from 'react-icons/md';
+import { MdOutlineCandlestickChart, MdOutlineRestaurantMenu } from 'react-icons/md';
 
 export default function Navigation() {
 	const { isCollapse, setIsCollapse, windowWidth } = useAppContext();
@@ -35,16 +35,16 @@ export default function Navigation() {
 				Home
 			</Link>
 			<Link
-				href={'/canvas'}
+				href={'/order'}
 				className={`my-4 text-center flex flex-col items-center text-xs ${
-					pathname == '/canvas' ? 'text-theme' : 'text-muted'
+					pathname == '/order' ? 'text-theme' : 'text-muted'
 				}`}
 				onClick={handleNavClick}
 			>
-				<MdOutlineCandlestickChart className="size-5" />
-				Canvas
+				<MdOutlineRestaurantMenu className="size-5" />
+				Order
 			</Link>
-			<Link
+			{/* <Link
 				href={'/compare'}
 				className={`my-4 text-center flex flex-col items-center text-xs ${
 					pathname == '/compare' ? 'text-theme' : 'text-muted'
@@ -83,7 +83,7 @@ export default function Navigation() {
 			>
 				<CgWebsite className="size-5" />
 				Page 3
-			</Link>
+			</Link> */}
 		</nav>
 	);
 }

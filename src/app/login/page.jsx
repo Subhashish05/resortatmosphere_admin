@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useAppContext } from '@/context/context';
 import NoticeCard from '@/components/noticecard';
 import { LuEye, LuEyeOff } from 'react-icons/lu';
+import Link from 'next/link';
+import Image from 'next/image';
 
 export default function LoginPage() {
 	const { setUserContext } = useAppContext();
@@ -45,11 +47,11 @@ export default function LoginPage() {
 
 	return (
 		<>
-			<NoticeCard isError={error} notice={message} />
+			<NoticeCard key={message} isError={error} notice={message} />
 
 			<div className="login_container p-4 h-screen w-full">
 				<div className="bg-mid pb-8 px-8 rounded-sm shadow w-full max-w-md">
-					<img src="/images/bullionbull.webp" alt="bullionbull" className="h-40 mx-auto" />
+					<Image src="/img/logo.png" alt="Resort Atmosphere" width={160} height={160} className="mx-auto" />
 					<form onSubmit={handleLogin} className="space-y-4">
 						<input
 							type="email"
@@ -86,7 +88,7 @@ export default function LoginPage() {
 							type="submit"
 							disabled={loading}
 							className={`shadow w-full py-2 rounded font-semibold transition text-white ${
-								loading ? 'bg-yellow-700 cursor-not-allowed' : 'bg-theme hover:bg-yellow-700'
+								loading ? 'bg-yellow-600 cursor-not-allowed' : 'bg-theme hover:bg-yellow-600'
 							}`}
 						>
 							{loading ? 'Logging In...' : 'Log In'}
@@ -94,9 +96,9 @@ export default function LoginPage() {
 					</form>
 
 					<p className="text-center text-base mt-4">
-						<a href="/forgot-password" className="text-red-500">
+						<Link href="/forgot-password" className="text-red-500 font-light">
 							Forgot Password ?
-						</a>
+						</Link>
 					</p>
 				</div>
 			</div>

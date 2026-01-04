@@ -10,7 +10,7 @@
 	--main: hsl(0, 0%, 10%);
 	--muted: hsl(0, 0%, 40%);
 
-	--theme: hsl(41, 57%, 50%);
+	--theme: hsl(45, 89%, 54%);
 	--nav-bg: hsl(0, 0%, 99%);
 	--sub_menu: hsl(0, 0%, 93%);
 	
@@ -27,7 +27,7 @@
 	--main: hsl(0, 0%, 95%);
 	--muted: hsl(0, 0%, 70%);
 
-	--theme: hsl(41, 57%, 50%);;
+	--theme: hsl(45, 89%, 54%);
 	--nav-bg: hsl(233, 90%, 10%);
 	--sub_menu: hsl(0, 0%, 12%);
 	
@@ -72,12 +72,12 @@ nav + main{
 }
 @media(width > 480px){
 	nav + main{
-		margin: 8px 0 8px 68px;
-		width: calc(100vw - 78px);
+		margin: 4px 0 4px 64px;
+		width: calc(100vw - 84px);
 	}
 }
 nav.collapsed + main{
-	margin: 8px 0px;
+	margin: 4px 0px;
 	width: 100%;
 }
 a {
@@ -121,21 +121,16 @@ button {
 .profile.show {
 	right: 0.5rem;
 }
-.chart_candle *{
-	border-color: currentColor;
-	color: currentColor;
+input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    height: 16px;
+    width: 16px;
+    background-color: hsl(0, 0%, 40%);
+    mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>');
+    mask-size: contain;
+    mask-repeat: no-repeat;    
+    cursor: pointer;
 }
-.tip_text{
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	position: relative;
-}
-.tip_text::after{
-	content: ':';
-	position: absolute;
-	top: 0;
-	color: hsl(0, 0%, 50%);
-	left: 50%;
-	transform: translateX(-50%);
+input[type="search"]::-webkit-search-cancel-button:hover {
+    background-color: #ef4444;
 }

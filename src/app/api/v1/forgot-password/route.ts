@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     }
 
     const [rows] = await db.query<User[]>(
-      'SELECT * FROM auth WHERE email = ? LIMIT 1',
+      'SELECT * FROM users WHERE email = ? LIMIT 1',
       [email]
     );
     const user = rows[0];
@@ -45,7 +45,6 @@ export async function POST(request: NextRequest) {
       <body>
         <p>Hi ${user.name},</p>
         <p>Click the button to reset your password:</p>
-        <a href="https://tools.bullionbulls.com/forgot-password/${token}" target="_blank">Reset Password</a>
         <p>This link will expire in 1 hour.</p>
       </body>
       </html>
@@ -86,7 +85,7 @@ export async function PATCH(req: NextRequest) {
     }
 
     const [rows] = await db.query<User[]>(
-      'SELECT * FROM auth WHERE email = ? LIMIT 1',
+      'SELECT * FROM users WHERE email = ? LIMIT 1',
       [email]
     );
     const user = rows[0];
