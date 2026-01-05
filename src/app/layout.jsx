@@ -32,8 +32,8 @@ export default async function RootLayout({ children }) {
 						<>
 							<Header />
 							<Navigation />
-							<main className="bg-mid min-h-[calc(100vh-96px)]">{children}</main>
-							<footer className="bg-mid w-full">
+							<main className="bg-mid min-h-[calc(100vh-64px)]">{children}</main>
+							<footer className="bg-mid w-full border-t border-neutral-500">
 								<div className="text-[10px] text-muted text-center">
 									<span>
 										&copy; {new Date().getFullYear()} Resort Atmosphere. All rights reserved.

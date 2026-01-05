@@ -21,7 +21,7 @@ export const ContextProvider = ({ children }) => {
 	const [darkmode, setDarkmode] = useState(isDark);
 	const [categories, setCategories] = useState([]);
 	const [windowWidth, setWindowWidth] = useState(0);
-	const [isCollapse, setIsCollapse] = useState(false);
+	const [isCollapse, setIsCollapse] = useState(true);
 
 	useLayoutEffect(() => {
 		//theme assess

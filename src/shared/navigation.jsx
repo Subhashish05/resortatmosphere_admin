@@ -3,26 +3,25 @@
 import { useAppContext } from '@/context/context';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { AiOutlineControl } from 'react-icons/ai';
-import { CgWebsite } from 'react-icons/cg';
-import { FaPercent } from 'react-icons/fa';
-import { LuChartCandlestick, LuHouse } from 'react-icons/lu';
-import { MdOutlineCandlestickChart, MdOutlineRestaurantMenu } from 'react-icons/md';
+import { BiFoodMenu } from 'react-icons/bi';
+import { FaRegImage } from 'react-icons/fa6';
+import { GrContact } from 'react-icons/gr';
+import { IoBedOutline } from 'react-icons/io5';
+import { LuHouse, LuUsers } from 'react-icons/lu';
+import { MdOutlineRateReview, MdOutlineRestaurantMenu } from 'react-icons/md';
 
 export default function Navigation() {
 	const { isCollapse, setIsCollapse, windowWidth } = useAppContext();
 	const pathname = usePathname();
 
 	const handleNavClick = () => {
-		if (windowWidth <= 480) {
-			setIsCollapse(true);
-		}
+		setIsCollapse(true);
 	};
 	return (
 		<nav
 			className={`${
 				isCollapse ? '-left-30 collapsed' : 'left-0'
-			} bg-mid h-[calc(100vh-48px)] flex flex-col items-center transition-[left] duration-500 fixed top-12 w-15 z-51`}
+			} bg-light h-[calc(100vh-48px)] flex flex-col items-center transition-[left] duration-500 fixed top-12 w-15 z-51`}
 		>
 			<Link
 				href={'/'}
@@ -44,46 +43,66 @@ export default function Navigation() {
 				<MdOutlineRestaurantMenu className="size-5" />
 				Order
 			</Link>
-			{/* <Link
-				href={'/compare'}
+			<Link
+				href={'/menu'}
 				className={`my-4 text-center flex flex-col items-center text-xs ${
-					pathname == '/compare' ? 'text-theme' : 'text-muted'
+					pathname == '/menu' ? 'text-theme' : 'text-muted'
 				}`}
 				onClick={handleNavClick}
 			>
-				<LuChartCandlestick className="size-5" />
-				Compare
+				<BiFoodMenu className="size-5" />
+				Menu
 			</Link>
 			<Link
-				href={'/percent'}
+				href={'/staff'}
 				className={`my-4 text-center flex flex-col items-center text-xs ${
-					pathname == '/page1' ? 'text-theme' : 'text-muted'
+					pathname == '/staff' ? 'text-theme' : 'text-muted'
 				}`}
 				onClick={handleNavClick}
 			>
-				<FaPercent className="size-4" />
-				Percent
+				<LuUsers className="size-5" />
+				Staff
 			</Link>
 			<Link
-				href={'/tip'}
+				href={'/booking'}
 				className={`my-4 text-center flex flex-col items-center text-xs ${
-					pathname == '/tip' ? 'text-theme' : 'text-muted'
+					pathname == '/booking' ? 'text-theme' : 'text-muted'
 				}`}
 				onClick={handleNavClick}
 			>
-				<AiOutlineControl className="size-5" />
-				Tip
+				<IoBedOutline className="size-5" />
+				Booking
 			</Link>
 			<Link
-				href={'/page3'}
+				href={'/contact'}
 				className={`my-4 text-center flex flex-col items-center text-xs ${
-					pathname == '/page3' ? 'text-theme' : 'text-muted'
+					pathname == '/contact' ? 'text-theme' : 'text-muted'
 				}`}
 				onClick={handleNavClick}
 			>
-				<CgWebsite className="size-5" />
-				Page 3
-			</Link> */}
+				<GrContact className="size-5" />
+				Contact
+			</Link>
+			<Link
+				href={'/gallery'}
+				className={`my-4 text-center flex flex-col items-center text-xs ${
+					pathname == '/gallery' ? 'text-theme' : 'text-muted'
+				}`}
+				onClick={handleNavClick}
+			>
+				<FaRegImage className="size-5" />
+				Gallery
+			</Link>
+			<Link
+				href={'/review'}
+				className={`my-4 text-center flex flex-col items-center text-xs ${
+					pathname == '/review' ? 'text-theme' : 'text-muted'
+				}`}
+				onClick={handleNavClick}
+			>
+				<MdOutlineRateReview className="size-5" />
+				Review
+			</Link>
 		</nav>
 	);
 }
