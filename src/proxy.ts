@@ -27,6 +27,6 @@ export function proxy(req: NextRequest) {
 export const config = {
     // Optimized matcher to exclude internal Next.js paths and static files
     matcher: [
-        '/((?!api|_next/static|_next/image|img|favicon.ico|public/).*)',
+        '/((?!api|_next/static|_next/image|img|menu|favicon.ico|public/).*)',
     ],
 };

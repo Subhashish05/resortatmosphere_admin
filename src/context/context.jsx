@@ -3,7 +3,7 @@
 import { createContext, useContext, useLayoutEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 const AppContext = createContext();
 
@@ -19,7 +19,7 @@ export const ContextProvider = ({ children }) => {
 	const [queryClient] = useState(() => new QueryClient());
 	const [userContext, setUserContext] = useState(nullData);
 	const [darkmode, setDarkmode] = useState(isDark);
-	const [categories, setCategories] = useState([]);
+	const [orderList, setOrderList] = useState([]);
 	const [windowWidth, setWindowWidth] = useState(0);
 	const [isCollapse, setIsCollapse] = useState(true);
 
@@ -37,6 +37,7 @@ export const ContextProvider = ({ children }) => {
 				setDarkmode(false);
 			}
 		}
+
 		//window width assess
 		setWindowWidth(window.innerWidth);
 
@@ -86,8 +87,8 @@ export const ContextProvider = ({ children }) => {
 			value={{
 				userContext,
 				setUserContext,
-				categories,
-				setCategories,
+				orderList,
+				setOrderList,
 				darkmode,
 				setDarkmode,
 				windowWidth,

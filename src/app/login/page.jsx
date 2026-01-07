@@ -2,25 +2,22 @@
 
 import { useState } from 'react';
 import { useAppContext } from '@/context/context';
-import NoticeCard from '@/components/noticecard';
+import { useNotice } from '@/context/noticeContext';
 import { LuEye, LuEyeOff } from 'react-icons/lu';
 import Link from 'next/link';
 import Image from 'next/image';
 
 export default function LoginPage() {
 	const { setUserContext } = useAppContext();
+	const { addNotice } = useNotice();
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [message, setMessage] = useState('');
-	const [error, setError] = useState(false);
 	const [showPassword, setShowPassword] = useState(false);
 	const [loading, setLoading] = useState(false);
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
 		setLoading(true);
-		setError(false);
-		setMessage('');
 
 		try {
 			const res = await fetch('/api/v1/login', {
@@ -35,11 +32,10 @@ export default function LoginPage() {
 			// Save to context
 			setUserContext(data.user);
 
-			setMessage(data.message || 'Login successful');
+			addNotice(data.message || 'Login successful');
 			window.location.reload();
 		} catch (err) {
-			setError(true);
-			setMessage(err.message || 'Something went wrong');
+			addNotice(err.message || 'Something went wrong', true);
 		} finally {
 			setLoading(false);
 		}
@@ -47,8 +43,6 @@ export default function LoginPage() {
 
 	return (
 		<>
-			<NoticeCard key={message} isError={error} notice={message} />
-
 			<div className="login_container p-4 h-screen w-full">
 				<div className="bg-mid pb-8 px-8 rounded-sm shadow w-full max-w-md">
 					<Image src="/img/logo.png" alt="Resort Atmosphere" width={160} height={160} className="mx-auto" />

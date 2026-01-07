@@ -1,5 +1,6 @@
 import '@/styles/globals.css';
 import { ContextProvider } from '@/context/context';
+import { NoticeProvider } from '@/context/noticeContext';
 import Header from '@/shared/header';
 import Navigation from '@/shared/navigation';
 import { cookies } from 'next/headers';
@@ -26,33 +27,35 @@ export default async function RootLayout({ children }) {
 			</head>
 			<ContextProvider>
 				<body className={`${Inter.variable} ${Roboto.variable} antialiased ${isDark === 'true' ? 'dark' : ''}`}>
-					{!isLoggedIn ? (
-						<main className="w-full">{children}</main>
-					) : (
-						<>
-							<Header />
-							<Navigation />
-							<main className="bg-mid min-h-[calc(100vh-64px)]">{children}</main>
-							<footer className="bg-mid w-full border-t border-neutral-500">
-								<div className="text-[10px] text-muted text-center">
-									<span>
-										&copy; {new Date().getFullYear()} Resort Atmosphere. All rights reserved.
-									</span>
-									<span className="block md:inline md:ml-1">
-										Developed by{' '}
-										<Link
-											href="https://spfreelancer.com"
-											target="_blank"
-											rel="noopener noreferrer"
-											className="hover:underline font-medium"
-										>
-											SP FREELANCER
-										</Link>
-									</span>
-								</div>
-							</footer>
-						</>
-					)}
+					<NoticeProvider>
+						{!isLoggedIn ? (
+							<main className="w-full">{children}</main>
+						) : (
+							<>
+								<Header />
+								<Navigation />
+								<main className="bg-mid min-h-[calc(100vh-64px)]">{children}</main>
+								<footer className="bg-mid w-full border-t border-neutral-500">
+									<div className="text-[10px] text-muted text-center">
+										<span>
+											&copy; {new Date().getFullYear()} Resort Atmosphere. All rights reserved.
+										</span>
+										<span className="block md:inline md:ml-1">
+											Developed by{' '}
+											<Link
+												href="https://spfreelancer.com"
+												target="_blank"
+												rel="noopener noreferrer"
+												className="hover:underline font-medium"
+											>
+												SP FREELANCER
+											</Link>
+										</span>
+									</div>
+								</footer>
+							</>
+						)}
+					</NoticeProvider>
 					{process.env.NODE_ENV === 'production' && (
 						<Script id="disable-inspect" strategy="beforeInteractive">
 							{`

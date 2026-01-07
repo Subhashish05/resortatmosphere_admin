@@ -7,10 +7,13 @@ import { useEffect, useRef } from 'react';
 import { BiMoon, BiSun, BiUser } from 'react-icons/bi';
 import { LuPanelLeftClose, LuPanelLeftOpen, LuLogOut } from 'react-icons/lu';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
 export default function Header() {
 	const { darkmode, setDarkmode, userContext, setUserContext, isCollapse, setIsCollapse } = useAppContext();
 	const profile = useRef();
+
+	const pathname = usePathname();
 
 	const toggleProfile = () => {
 		profile.current.classList.toggle('show');
@@ -60,6 +63,16 @@ export default function Header() {
 			}
 		}
 	}, [isCollapse]);
+
+	// 1. Split the path and filter out empty strings (e.g., from trailing slashes)
+	const segments = pathname.split('/').filter(Boolean);
+
+	// 2. Get the last element using .at(-1)
+	const lastSegment = segments.at(-1) || '';
+
+	// 3. Transform "active-orders" to "Active Orders"
+	const displayName = lastSegment.replace(/-/g, ' '); // Replace hyphens with spaces
+
 	return (
 		<header className="font-head bg-mid py-2 px-5 flex items-center justify-between h-12 w-full sticky top-0 left-0 z-50 shadow">
 			<div>
@@ -75,9 +88,22 @@ export default function Header() {
 					/>
 				)}
 			</div>
+
 			<div className="text-theme text-2xl flex items-center">
-				<Image src="/img/logo.png" alt="logo" width={64} height={64} className="h-12 w-auto mr-1.5" />
+				{pathname == '/' ? (
+					<Image
+						src="/img/logo.png"
+						alt="logo"
+						width={64}
+						height={64}
+						className="h-12 w-auto mr-1.5"
+						loading="eager"
+					/>
+				) : (
+					<p className='uppercase font-semibold tracking-wide'>{displayName}</p>
+				)}
 			</div>
+
 			{userContext.email == null ? (
 				<>
 					<div className="relative header_btn">

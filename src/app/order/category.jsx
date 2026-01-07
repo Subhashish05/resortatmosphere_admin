@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import CategorySkeleton from '@/ui/category';
 import { useQuery } from '@tanstack/react-query';
 import { FaXmark } from 'react-icons/fa6';

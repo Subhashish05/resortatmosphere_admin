@@ -1,52 +1,50 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { FaXmark } from 'react-icons/fa6';
+import { useCallback, useRef } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
-export default function NoticeCard({ isError, notice }) {
-    // This state starts as 'false' every single time a new key is provided
-    const [isDismissed, setIsDismissed] = useState(false);
-    const timerRef = useRef(null);
+// --- The Animated Card Component ---
+export default function NoticeCard({ notice, onClose }) {
+    const containerRef = useRef(null);
+    const progressRef = useRef(null);
 
-    useEffect(() => {
-        if (!notice) return;
+    const handleDismiss = useCallback(() => {
+        gsap.to(containerRef.current, {
+            x: 100,
+            opacity: 0,
+            duration: 0.4,
+            ease: 'power2.in',
+            onComplete: onClose
+        });
+    }, [onClose]);
 
-        // No need to setIsDismissed(false) here! 
-        // React handled the reset because the 'key' changed.
-
-        timerRef.current = setTimeout(() => {
-            setIsDismissed(true);
-        }, 5000);
-
-        return () => {
-            if (timerRef.current) clearTimeout(timerRef.current);
-        };
-    }, [notice]); // Re-run timer if notice changes
-
-    const isVisible = Boolean(notice) && !isDismissed;
-
-    if (!notice) return null;
+    useGSAP(() => {
+        const tl = gsap.timeline();
+        tl.fromTo(containerRef.current, 
+            { x: 100, opacity: 0 }, 
+            { x: 0, opacity: 1, duration: 0.35, ease: 'power3.out' }
+        );
+        tl.fromTo(progressRef.current, 
+            { width: '0%' }, 
+            { width: '100%', duration: 2.5, ease: 'none', onComplete: handleDismiss }
+        );
+    }, { scope: containerRef });
 
     return (
         <section
-            role="alert"
-            className={`rounded-sm flex items-center justify-center p-6 py-3 w-80 fixed top-16 z-30 
-                ${isVisible ? 'right-0' : '-right-80'}
-                ${isError ? 'bg-red-200 text-red-600' : 'bg-emerald-50 text-emerald-600'}
-                transition-[right] duration-300`}
+            ref={containerRef}
+            className={`pointer-events-auto relative p-4 w-80 rounded-md shadow-xl border backdrop-blur-md
+                ${notice.isError ? 'bg-red-50/90 text-red-700 border-red-200' : 'bg-emerald-50/90 text-emerald-700 border-emerald-200'}`}
         >
-            <p className="w-11/12 text-sm">{notice}</p>
-            <button
-                type="button"
-                className="bi bi-x-lg w-1/12"
-                onClick={() => setIsDismissed(true)}
-                aria-label="Close notice"
-            ></button>
-
-            <span
-                className={`absolute ${isError ? 'bg-red-600' : 'bg-emerald-600'} bottom-0 left-0 h-0.5 
-                    ${isVisible ? 'w-full' : 'w-0'} 
-                    transition-[width] duration-5000 ease-linear`}
-            ></span>
+            <div className="flex justify-between items-start gap-2">
+                <p className="text-sm font-semibold leading-snug">{notice.text}</p>
+                <button onClick={handleDismiss} className="mt-0.5 hover:scale-110 transition-transform">
+                    <FaXmark />
+                </button>
+            </div>
+            <span ref={progressRef} className={`absolute bottom-0 left-0 h-0.5 rounded-b-md ${notice.isError ? 'bg-red-500' : 'bg-emerald-500'}`} />
         </section>
     );
 }
