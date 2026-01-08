@@ -37,15 +37,15 @@ export default function Category({category, setCategory}) {
     };
 
     return (
-        <section className="mb-4 sticky top-26 z-10 bg-mid">
-            <div className="flex flex-nowrap items-center min-h-8 mx-3 py-2 gap-4 overflow-x-scroll scroll-smooth">
+        <section className="sticky top-26 z-10 bg-mid pb-4">
+            <div className="flex flex-nowrap items-center min-h-8 md:mx-3 py-2 gap-2 overflow-x-scroll scroll-smooth">
                 {isLoading ? (
                     <CategorySkeleton />
                 ) : (
                     sortedCategories.map((cat) => (
                         <div
                             key={cat.id}
-                            className={`text-sm lg:text-base category_card ${category === cat.name ? 'current_category' : ''}`}
+                            className={`text-sm lg:text-base mx-1 category_card ${category === cat.name ? 'current_category' : ''}`}
                             onClick={() => toggleCategory(cat.name)}
                         >
                             {cat.name}

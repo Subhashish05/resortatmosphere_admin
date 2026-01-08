@@ -2,7 +2,7 @@ import { useAppContext } from '@/context/context';
 import { useNotice } from '@/context/noticeContext';
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
-import { FaClipboardCheck, FaClipboardList, FaMinus, FaPlus } from 'react-icons/fa6';
+import { FaArrowLeft, FaClipboardCheck, FaClipboardList, FaMinus, FaPlus } from 'react-icons/fa6';
 import { HiOutlineXMark } from 'react-icons/hi2';
 import ActiveOrderCount from './activeOrderCount';
 import { useQueryClient } from '@tanstack/react-query';
@@ -11,6 +11,8 @@ export default function Cart() {
 	const { userContext, orderList, setOrderList } = useAppContext();
 	const { addNotice } = useNotice();
 	const queryClient = useQueryClient();
+
+	const [isVisible, setIsVisible] = useState(false);
 
 	// order details
 	const [fullName, setFullName] = useState('');
@@ -77,6 +79,7 @@ export default function Cart() {
 				addNotice('Order placed successfully!');
 
 				queryClient.invalidateQueries(['activeOrderList']);
+				setIsVisible(false)
 
 				// Clear the form and list
 				setOrderList([]);
@@ -93,211 +96,244 @@ export default function Cart() {
 
 	return (
 		<>
-			<div className="flex justify-between items-center">
-				<div className="w-1/2">
-					<Link
-						href={'/order/active-orders'}
-						className="flex justify-center items-center gap-2 m-2 px-2 py-1 bg-emerald-500 rounded-sm shadow text-sm lg:text-base text-center text-black active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-					>
-						<FaClipboardList /> <ActiveOrderCount/>
-					</Link>
-				</div>
-				<div className="w-1/2">
-					<Link
-						href={'/order/all-orders'}
-						className="flex justify-center items-center gap-2 m-2 px-2 py-1 bg-main text-dark rounded-sm shadow text-sm lg:text-base text-center active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-					>
-						<FaClipboardCheck /> All Orders
-					</Link>
-				</div>
-			</div>
-
-			<div className="mt-2 grow overflow-y-scroll select-none bg-light">
-				<table className="w-full border-collapse">
-					<thead>
-						<tr className="bg-amber-500/25 text-sm lg:text-base">
-							<th className="font-light text-left p-2">Items</th>
-							<th className="font-light text-center w-20 p-2">QTY</th>
-							<th className="font-light text-right w-24 p-2">Amount</th>
-						</tr>
-					</thead>
-					<tbody>
-						{orderList.map((list, i) => (
-							<tr key={list.item} className="border-b border-myBorder h-10 text-sm">
-								<td className="pl-2 font-normal">{list.item}</td>
-								<td className="text-center">
-									<div className="flex items-center justify-center gap-2">
-										<button
-											className="flex justify-center items-center w-6 h-6 rounded-full active:scale-90 transition-transform"
-											onClick={() => removeItem(list.item)}
-										>
-											<FaMinus />
-										</button>
-										<span className="w-5 text-sm text-center">{list.quantity}</span>
-										<button
-											className="flex justify-center items-center w-6 h-6 rounded-full active:scale-90 transition-transform"
-											onClick={() => addItem(list.item)}
-										>
-											<FaPlus />
-										</button>
-									</div>
-								</td>
-								<td className="text-right pr-2">₹{(list.quantity * list.amount).toFixed(2)}</td>
-							</tr>
-						))}
-					</tbody>
-				</table>
-			</div>
-
-			<div className="text-xs text-muted px-2 mt-4">
-				<p className="border-b border-myBorder pb-1 flex justify-between">
-					<span>Total Items:</span>
-					<span>{totalItems}</span>
-				</p>
-				<p className="border-b border-myBorder pb-1 pt-1 flex justify-between">
-					<span>Cart Total:</span>
-					<span>₹{cartTotal.toFixed(2)}</span>
-				</p>
-				<p className="text-sm text-main pt-1 flex justify-between">
-					<span>Total Payable</span>
-					<span className="font-bold">₹{cartTotal.toFixed(2)}</span>
-				</p>
-			</div>
-
-			{/* Trigger Button */}
-			<div className="flex justify-around">
-				<button
-					disabled={orderList.length === 0}
-					popoverTarget="confirmOrder"
-					className="w-[calc(100%-1rem)] m-2 px-2 py-2 rounded-sm shadow text-sm lg:text-base text-center bg-blue-500 text-white font-medium active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-				>
-					Place Order
-				</button>
-				<button
-					disabled={orderList.length === 0}
-					popoverTarget="confirmOrder"
-					className="w-[calc(100%-1rem)] m-2 px-2 py-2 rounded-sm shadow text-sm lg:text-base text-center bg-blue-500 text-white font-medium active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-				>
-					Print Bill
-				</button>
-			</div>
-
-			{/* Popover Content */}
 			<section
-				id="confirmOrder"
-				popover="auto"
-				className="m-auto p-4 bg-light text-main rounded-lg shadow-xl backdrop:bg-black/50 backdrop:backdrop-blur-xs fixed top-0 left-0"
+				className={`${
+					isVisible ? 'flex' : 'hidden'
+				} md:flex flex-col w-full md:w-2/5 bg-mid border border-myBorder rounded-sm fixed md:sticky h-[calc(100vh-52px)] top-13 right-0 z-50`}
 			>
-				<button
-					type="button"
-					popoverTarget="confirmOrder"
-					popoverTargetAction="hide"
-					className="absolute top-1 right-1 text-red-500 flex justify-center items-center size-8"
-				>
-					<HiOutlineXMark size={20} />
-				</button>
-				<div className="flex flex-col gap-4 w-75">
-					<h2 className="text-xl font-bold border-b border-myBorder text-center pb-2">Confirm Order</h2>
-					<div>
-						<h3 className="font-light mb-1">Customer Details</h3>
-						<div className="relative mb-3">
-							<input
-								type="text"
-								name="full_name"
-								id="full_name"
-								placeholder=""
-								className="peer border border-theme p-2 rounded-sm outline-0 w-full"
-								value={fullName}
-								onChange={(e) => setFullName(e.target.value)}
-							/>
-							<label
-								htmlFor="full_name"
-								className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-muted transition-all pointer-events-none peer-focus:top-0.5 peer-focus:text-xs peer-focus:text-amber-600 peer-focus:bg-light peer-[:not(:placeholder-shown)]:top-0.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:bg-light px-0.5"
-							>
-								Full Name
-							</label>
-						</div>
-						<div className="relative mb-3">
-							<input
-								type="text"
-								name="mobile_number"
-								id="mobile_number"
-								placeholder=""
-								className="peer border border-theme p-2 rounded-sm outline-0 w-full"
-								value={mobileNumber}
-								onChange={(e) => setMobileNumber(e.target.value)}
-							/>
-							<label
-								htmlFor="mobile_number"
-								className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-muted transition-all pointer-events-none peer-focus:top-0.5 peer-focus:text-xs peer-focus:text-amber-600 peer-focus:bg-light peer-[:not(:placeholder-shown)]:top-0.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:bg-light px-0.5"
-							>
-								Mobile No
-							</label>
-						</div>
-						<TableInput tableNumber={tableNumber} setTableNumber={setTableNumber} />
-						<div className="relative mb-3">
-							<input
-								type="text"
-								name="kot_remarks"
-								id="kot_remarks"
-								placeholder=""
-								className="peer border border-theme p-2 rounded-sm outline-0 w-full"
-								value={kotRemarks}
-								onChange={(e) => setKotRemarks(e.target.value)}
-							/>
-							<label
-								htmlFor="kot_remarks"
-								className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-muted transition-all pointer-events-none peer-focus:top-0.5 peer-focus:text-xs peer-focus:text-amber-600 peer-focus:bg-light peer-[:not(:placeholder-shown)]:top-0.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:bg-light px-0.5"
-							>
-								KOT Remarks
-							</label>
-						</div>
-						<div className="relative">
-							<input
-								type="text"
-								name="bill_remarks"
-								id="bill_remarks"
-								placeholder=""
-								className="peer border border-theme p-2 rounded-sm outline-0 w-full"
-								value={billRemarks}
-								onChange={(e) => setBillRemarks(e.target.value)}
-							/>
-							<label
-								htmlFor="bill_remarks"
-								className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-muted transition-all pointer-events-none peer-focus:top-0.5 peer-focus:text-xs peer-focus:text-amber-600 peer-focus:bg-light peer-[:not(:placeholder-shown)]:top-0.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:bg-light px-0.5"
-							>
-								Bill Remarks
-							</label>
-						</div>
+				<div className="relative py-1 border-b border-myBorder">
+					<h2 className="text-xl md:text-3xl text-center">Order Cart</h2>
+					<button
+						type="button"
+						className="absolute top-0.5 right-1 text-red-500 flex justify-center items-center size-8"
+						onClick={() => setIsVisible(false)}
+					>
+						<HiOutlineXMark size={24} />
+					</button>
+				</div>
+				<div className="flex justify-between items-center my-2">
+					<div className="w-1/2">
+						<Link
+							href={'/order/active-orders'}
+							className="flex justify-center items-center gap-1 m-2 px-2 py-1 bg-emerald-500 rounded-sm shadow text-sm lg:text-base text-center text-black active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+						>
+							<FaClipboardList /> <ActiveOrderCount />
+						</Link>
 					</div>
-					<p className="text-sm text-main py-2 border-t border-b border-myBorder flex justify-between">
-						<span>To Be Paid</span>
+					<div className="w-1/2">
+						<Link
+							href={'/order/all-orders'}
+							className="flex justify-center items-center gap-2 m-2 px-2 py-1 bg-main text-dark rounded-sm shadow text-sm lg:text-base text-center active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+						>
+							<FaClipboardCheck /> All Orders
+						</Link>
+					</div>
+				</div>
+
+				<div className="mt-2 grow overflow-y-scroll select-none bg-light">
+					<table className="w-full border-collapse">
+						<thead>
+							<tr className="bg-amber-500/25 text-sm lg:text-base">
+								<th className="font-light text-left p-2">Items</th>
+								<th className="font-light text-center w-20 p-2">QTY</th>
+								<th className="font-light text-right w-24 p-2">Amount</th>
+							</tr>
+						</thead>
+						<tbody>
+							{orderList.map((list, i) => (
+								<tr key={list.item} className="border-b border-myBorder h-10 text-sm">
+									<td className="pl-2 font-normal">{list.item}</td>
+									<td className="text-center">
+										<div className="flex items-center justify-center gap-2">
+											<button
+												className="flex justify-center items-center w-6 h-6 rounded-full active:scale-90 transition-transform"
+												onClick={() => removeItem(list.item)}
+											>
+												<FaMinus />
+											</button>
+											<span className="w-5 text-sm text-center">{list.quantity}</span>
+											<button
+												className="flex justify-center items-center w-6 h-6 rounded-full active:scale-90 transition-transform"
+												onClick={() => addItem(list.item)}
+											>
+												<FaPlus />
+											</button>
+										</div>
+									</td>
+									<td className="text-right pr-2">₹{(list.quantity * list.amount).toFixed(2)}</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
+
+				<div className="text-xs text-muted px-2 mt-4">
+					<p className="border-b border-myBorder pb-1 flex justify-between">
+						<span>Total Items:</span>
+						<span>{totalItems}</span>
+					</p>
+					<p className="border-b border-myBorder pb-1 pt-1 flex justify-between">
+						<span>Cart Total:</span>
+						<span>₹{cartTotal.toFixed(2)}</span>
+					</p>
+					<p className="text-sm text-main pt-1 flex justify-between">
+						<span>Total Payable</span>
 						<span className="font-bold">₹{cartTotal.toFixed(2)}</span>
 					</p>
-					<div className="flex justify-around gap-2 text-white">
-						<button
-							className="w-2/5 px-4 py-2 bg-red-600 rounded"
-							onClick={() => {
-								setFullName('');
-								setMobileNumber('');
-								setTableNumber('');
-								setKotRemarks('');
-								setBillRemarks('');
-							}}
-						>
-							Reset
-						</button>
-						<button
-							onClick={handlePlaceOrder}
-							popoverTarget="confirmOrder"
-							popoverTargetAction="hide"
-							className="w-2/5 px-4 py-2 bg-green-600 rounded"
-						>
-							Confirm
-						</button>
+				</div>
+
+				{/* Trigger Button */}
+				<div className="flex justify-around">
+					<button
+						disabled={orderList.length === 0}
+						popoverTarget="confirmOrder"
+						className="w-[calc(100%-1rem)] m-2 px-2 py-2 rounded-sm shadow text-sm lg:text-base text-center bg-blue-500 text-white font-medium active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+					>
+						Place Order
+					</button>
+					<button
+						disabled={orderList.length === 0}
+						popoverTarget="confirmOrder"
+						className="w-[calc(100%-1rem)] m-2 px-2 py-2 rounded-sm shadow text-sm lg:text-base text-center bg-blue-500 text-white font-medium active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+					>
+						Print Bill
+					</button>
+				</div>
+
+				{/* Popover Content */}
+				<section
+					id="confirmOrder"
+					popover="auto"
+					className="m-auto p-4 bg-light text-main rounded-lg shadow-xl backdrop:bg-black/50 backdrop:backdrop-blur-xs fixed top-0 left-0"
+				>
+					<button
+						type="button"
+						popoverTarget="confirmOrder"
+						popoverTargetAction="hide"
+						className="absolute top-1 right-1 text-red-500 flex justify-center items-center size-8"
+					>
+						<HiOutlineXMark size={20} />
+					</button>
+					<div className="flex flex-col gap-4 w-75">
+						<h2 className="text-xl font-bold border-b border-myBorder text-center pb-2">Confirm Order</h2>
+						<div>
+							<h3 className="font-light mb-1">Customer Details</h3>
+							<div className="relative mb-3">
+								<input
+									type="text"
+									name="full_name"
+									id="full_name"
+									placeholder=""
+									className="peer border border-theme p-2 rounded-sm outline-0 w-full"
+									value={fullName}
+									onChange={(e) => setFullName(e.target.value)}
+								/>
+								<label
+									htmlFor="full_name"
+									className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-muted transition-all pointer-events-none peer-focus:top-0.5 peer-focus:text-xs peer-focus:text-amber-600 peer-focus:bg-light peer-[:not(:placeholder-shown)]:top-0.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:bg-light px-0.5"
+								>
+									Full Name
+								</label>
+							</div>
+							<div className="relative mb-3">
+								<input
+									type="text"
+									name="mobile_number"
+									id="mobile_number"
+									placeholder=""
+									className="peer border border-theme p-2 rounded-sm outline-0 w-full"
+									value={mobileNumber}
+									onChange={(e) => setMobileNumber(e.target.value)}
+								/>
+								<label
+									htmlFor="mobile_number"
+									className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-muted transition-all pointer-events-none peer-focus:top-0.5 peer-focus:text-xs peer-focus:text-amber-600 peer-focus:bg-light peer-[:not(:placeholder-shown)]:top-0.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:bg-light px-0.5"
+								>
+									Mobile No
+								</label>
+							</div>
+							<TableInput tableNumber={tableNumber} setTableNumber={setTableNumber} />
+							<div className="relative mb-3">
+								<input
+									type="text"
+									name="kot_remarks"
+									id="kot_remarks"
+									placeholder=""
+									className="peer border border-theme p-2 rounded-sm outline-0 w-full"
+									value={kotRemarks}
+									onChange={(e) => setKotRemarks(e.target.value)}
+								/>
+								<label
+									htmlFor="kot_remarks"
+									className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-muted transition-all pointer-events-none peer-focus:top-0.5 peer-focus:text-xs peer-focus:text-amber-600 peer-focus:bg-light peer-[:not(:placeholder-shown)]:top-0.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:bg-light px-0.5"
+								>
+									KOT Remarks
+								</label>
+							</div>
+							<div className="relative">
+								<input
+									type="text"
+									name="bill_remarks"
+									id="bill_remarks"
+									placeholder=""
+									className="peer border border-theme p-2 rounded-sm outline-0 w-full"
+									value={billRemarks}
+									onChange={(e) => setBillRemarks(e.target.value)}
+								/>
+								<label
+									htmlFor="bill_remarks"
+									className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-muted transition-all pointer-events-none peer-focus:top-0.5 peer-focus:text-xs peer-focus:text-amber-600 peer-focus:bg-light peer-[:not(:placeholder-shown)]:top-0.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:bg-light px-0.5"
+								>
+									Bill Remarks
+								</label>
+							</div>
+						</div>
+						<p className="text-sm text-main py-2 border-t border-b border-myBorder flex justify-between">
+							<span>To Be Paid</span>
+							<span className="font-bold">₹{cartTotal.toFixed(2)}</span>
+						</p>
+						<div className="flex justify-around gap-2 text-white">
+							<button
+								className="w-2/5 px-4 py-2 bg-red-600 rounded"
+								onClick={() => {
+									setFullName('');
+									setMobileNumber('');
+									setTableNumber('');
+									setKotRemarks('');
+									setBillRemarks('');
+								}}
+							>
+								Reset
+							</button>
+							<button
+								onClick={handlePlaceOrder}
+								popoverTarget="confirmOrder"
+								popoverTargetAction="hide"
+								className="w-2/5 px-4 py-2 bg-green-600 rounded"
+							>
+								Confirm
+							</button>
+						</div>
+					</div>
+				</section>
+			</section>
+
+			<div className="flex items-center justify-between md:hidden fixed bottom-0 left-0 py-4 px-3 bg-light z-40 w-full gap-4">
+				<div className="flex items-center justify-center">
+					<p className="text-2xl md:text-4xl">TOTAL :</p>
+					<div className="text-center ml-3 w-20">
+						<p className="text-right">₹ {cartTotal}</p>
+						<p className="text-xs font-light text-muted">Total Item: {totalItems}</p>
 					</div>
 				</div>
-			</section>
+				<button
+					type="button"
+					className="bg-main text-dark px-5 py-2 rounded-full shadow"
+					onClick={() => setIsVisible(true)}
+				>
+					View Cart
+				</button>
+			</div>
 		</>
 	);
 }

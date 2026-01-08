@@ -57,7 +57,7 @@ export default function ActiveOrders() {
 				</div>
 			</div>
 
-			<section className="px-2 md:px-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+			<section className="px-2 md:px-10 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
 				{isLoading ? (
 					[...Array(12)].map((_, i) => <div key={i} className="h-82 bg-light animate-pulse rounded-md" />)
 				) : orders.length > 0 ? (

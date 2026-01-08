@@ -14,11 +14,12 @@ export default function OrderPage() {
 	const { setOrderList } = useAppContext();
 
 	return (
-		<section className="flex justify-center items-start mb-4">
+		<section className="flex flex-wrap justify-center items-start mb-4">
 			{/* menu area */}
 			<section className="w-full md:w-3/5 h-full relative">
-				<div className="sticky px-2 top-12 z-10 bg-mid flex justify-between items-center">
-					<div className="relative grow mr-6">
+
+				<div className="sticky px-2 pt-3 pb-4 top-12 md:top-12 z-10 bg-mid flex justify-between items-center">
+					<div className="relative grow mr-4">
 						<label htmlFor="search" className="absolute top-1/2 -translate-y-1/2 left-2">
 							<FiSearch className="size-5 stroke-theme" />
 						</label>
@@ -29,25 +30,26 @@ export default function OrderPage() {
 							value={search}
 							onChange={(e) => setSearch(e.target.value)}
 							placeholder="Search item.."
-							className="placeholder:font-light w-full h-8 my-3 rounded-4xl bg-linear-0 from-98% from-light to-10% to-highlight shadow pl-8 pr-2 outline-none"
+							className="placeholder:font-light w-full h-8 rounded-4xl bg-linear-0 from-98% from-light to-10% to-highlight shadow pl-8 pr-2 outline-none"
 						/>
 					</div>
 					<button
 						onClick={() => setOrderList([])}
-						className="h-8 my-3 px-6 rounded-4xl bg-linear-0 from-98% from-red-500 to-10% to-red-400 text-white text-sm lg:text-base shadow text-center flex items-center font-light"
+						className="whitespace-nowrap h-8 px-6 rounded-4xl bg-linear-0 from-98% from-red-500 to-10% to-red-400 text-white text-sm lg:text-base shadow text-center flex items-center font-light"
 					>
 						<BsCartXFill className="size-4 mr-1" />
 						Clear Cart
 					</button>
 				</div>
+
 				<Category category={selectedCategory} setCategory={setSelectedCategory} />
+
 				<Menu search={search} category={selectedCategory} />
 			</section>
 
 			{/* Cart area */}
-			<section className="w-full md:w-2/5 bg-mid border border-myBorder rounded-sm md:sticky h-[calc(100vh-52px)] md:top-13 flex flex-col">
-				<Cart />
-			</section>
+			<Cart />
+
 		</section>
 	);
 }
