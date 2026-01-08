@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useAppContext } from '@/context/context';
 import { useNotice } from '@/context/noticeContext';
 import { LuEye, LuEyeOff } from 'react-icons/lu';
@@ -14,6 +14,7 @@ export default function LoginPage() {
 	const [password, setPassword] = useState('');
 	const [showPassword, setShowPassword] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const passwordInput = useRef(null);
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
@@ -66,10 +67,11 @@ export default function LoginPage() {
 								autoComplete="current-password"
 								placeholder="Password"
 								className="shadow w-full px-4 py-2 bg-[#eee] dark:bg-[#111] rounded focus:outline-none pr-10"
+								ref={passwordInput}
 							/>
 							<button
 								type="button"
-								onClick={() => setShowPassword(!showPassword)}
+								onClick={() => {setShowPassword(!showPassword), passwordInput.current?.focus()}}
 								className="absolute right-2 top-1/2 -translate-y-1/2 text-muted"
 								tabIndex={-1}
 								aria-label="Toggle password visibility"

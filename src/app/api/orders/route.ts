@@ -1,4 +1,4 @@
-import { eventBus } from '@/lib/events';
+import { redis } from '@/lib/redis';
 import { db } from '@/lib/mysqldb';
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import { NextRequest, NextResponse } from 'next/server';
@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
 
 		const [result] = await db.query<ResultSetHeader>(query, values);
 
-		eventBus.emit('ORDER_CHANGED', result.insertId)
+		await redis.rpush('app_updates', { event: 'order_update', data: result.insertId });
 
 		return NextResponse.json(
 			{

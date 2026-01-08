@@ -2,7 +2,7 @@ import { useAppContext } from '@/context/context';
 import { useNotice } from '@/context/noticeContext';
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
-import { FaArrowLeft, FaClipboardCheck, FaClipboardList, FaMinus, FaPlus } from 'react-icons/fa6';
+import { FaClipboardCheck, FaClipboardList, FaMinus, FaPlus } from 'react-icons/fa6';
 import { HiOutlineXMark } from 'react-icons/hi2';
 import ActiveOrderCount from './activeOrderCount';
 import { useQueryClient } from '@tanstack/react-query';
@@ -99,9 +99,9 @@ export default function Cart() {
 			<section
 				className={`${
 					isVisible ? 'flex' : 'hidden'
-				} md:flex flex-col w-full md:w-2/5 bg-mid border border-myBorder rounded-sm fixed md:sticky h-[calc(100vh-52px)] top-13 right-0 z-50`}
+				} md:flex flex-col w-full md:w-2/5 bg-mid border border-myBorder rounded-sm fixed md:sticky h-[calc(100vh-16px)] md:h-[calc(100vh-52px)] top-2 md:top-13 right-0 z-5`}
 			>
-				<div className="relative py-1 border-b border-myBorder">
+				<div className="relative py-1 border-b border-myBorder md:hidden">
 					<h2 className="text-xl md:text-3xl text-center">Order Cart</h2>
 					<button
 						type="button"
@@ -318,7 +318,7 @@ export default function Cart() {
 				</section>
 			</section>
 
-			<div className="flex items-center justify-between md:hidden fixed bottom-0 left-0 py-4 px-3 bg-light z-40 w-full gap-4">
+			<div className="flex items-center justify-between md:hidden fixed bottom-0 left-0 py-4 px-3 bg-light z-3 w-full gap-4">
 				<div className="flex items-center justify-center">
 					<p className="text-2xl md:text-4xl">TOTAL :</p>
 					<div className="text-center ml-3 w-20">
@@ -436,7 +436,7 @@ function TableInput({ tableNumber, setTableNumber }) {
 				id="table_number"
 				autoComplete="off"
 				placeholder=" "
-				className="peer border border-theme p-2 rounded-sm outline-0 w-full bg-transparent z-10 relative"
+				className="peer border border-theme p-2 rounded-sm outline-0 w-full bg-transparent relative"
 				value={tableNumber}
 				onFocus={() => setShowSuggestions(true)}
 				onChange={(e) => {
@@ -447,7 +447,7 @@ function TableInput({ tableNumber, setTableNumber }) {
 			<label
 				htmlFor="table_number"
 				className="
-					absolute left-2 top-1/2 -translate-y-1/2 text-sm text-muted transition-all pointer-events-none z-20 
+					absolute left-2 top-1/2 -translate-y-1/2 text-sm text-muted transition-all pointer-events-none z-8 
 					peer-focus:top-0.5 peer-focus:text-xs peer-focus:text-amber-600 peer-focus:bg-light	 
 					peer-[:not(:placeholder-shown)]:top-0.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:bg-light px-0.5"
 			>
@@ -456,7 +456,7 @@ function TableInput({ tableNumber, setTableNumber }) {
 
 			{/* Google-style Suggestion Box */}
 			{showSuggestions && filteredSuggestions.length > 0 && (
-				<ul className="absolute left-0 right-0 top-full bg-light border border-t-0 border-mid shadow rounded-b-sm z-100 max-h-48 overflow-y-auto">
+				<ul className="absolute left-0 right-0 top-full bg-light border border-t-0 border-mid shadow rounded-b-sm z-10 max-h-48 overflow-y-auto">
 					{filteredSuggestions.map((suggestion, index) => (
 						<li
 							key={index}

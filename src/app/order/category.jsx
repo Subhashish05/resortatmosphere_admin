@@ -37,7 +37,7 @@ export default function Category({category, setCategory}) {
     };
 
     return (
-        <section className="sticky top-26 z-10 bg-mid pb-4">
+        <section className="sticky top-26 z-1 bg-mid pb-4">
             <div className="flex flex-nowrap items-center min-h-8 md:mx-3 py-2 gap-2 overflow-x-scroll scroll-smooth">
                 {isLoading ? (
                     <CategorySkeleton />

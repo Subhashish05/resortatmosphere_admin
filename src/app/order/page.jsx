@@ -8,6 +8,7 @@ import Menu from './menu';
 import Cart from './cart';
 import { BsCartXFill } from 'react-icons/bs';
 
+
 export default function OrderPage() {
 	const [search, setSearch] = useState('');
 	const [selectedCategory, setSelectedCategory] = useState('');
@@ -18,7 +19,7 @@ export default function OrderPage() {
 			{/* menu area */}
 			<section className="w-full md:w-3/5 h-full relative">
 
-				<div className="sticky px-2 pt-3 pb-4 top-12 md:top-12 z-10 bg-mid flex justify-between items-center">
+				<div className="sticky px-2 pt-3 pb-4 top-12 md:top-12 z-1 bg-mid flex justify-between items-center">
 					<div className="relative grow mr-4">
 						<label htmlFor="search" className="absolute top-1/2 -translate-y-1/2 left-2">
 							<FiSearch className="size-5 stroke-theme" />

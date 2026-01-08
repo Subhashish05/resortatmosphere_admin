@@ -1,35 +1,48 @@
+// app/api/sse/route.ts
 import { NextRequest } from 'next/server';
-import { eventBus } from '@/lib/events';
+import { redis } from '@/lib/redis';
 
-export const dynamic = 'force-dynamic';
+export const runtime = 'edge';
 
 export async function GET(req: NextRequest) {
     const encoder = new TextEncoder();
 
     const stream = new ReadableStream({
-        start(controller) {
+        async start(controller) {
             const sendMessage = (eventName: string, data: any) => {
                 const message = `event: ${eventName}\ndata: ${JSON.stringify(data)}\n\n`;
                 controller.enqueue(encoder.encode(message));
             };
 
-            // Define listeners
-            const onOrderUpdate = (data: any) => sendMessage('order_update', data);
-            const onContactUpdate = (data: any) => sendMessage('contact_update', data);
+            const heartbeat = setInterval(() => {
+                controller.enqueue(encoder.encode(': heartbeat\n\n'));
+            }, 15000);
 
-            // Subscribe to the bus
-            eventBus.on('ORDER_CHANGED', onOrderUpdate);
-            eventBus.on('CONTACT_CHANGED', onContactUpdate);
-
-            // Initial message
-            sendMessage('status', { message: 'Connected to Live Feed' });
-
-            // Cleanup: remove listeners when client disconnects
+            let isAborted = false;
             req.signal.addEventListener('abort', () => {
-                eventBus.off('ORDER_CHANGED', onOrderUpdate);
-                eventBus.off('CONTACT_CHANGED', onContactUpdate);
+                isAborted = true;
+                clearInterval(heartbeat);
                 controller.close();
             });
+
+            try {
+                while (!isAborted) {
+                    // Check Redis for a message
+                    const update = await redis.lpop('app_updates');
+
+                    if (update) {
+                        // Type casting for safety
+                        const { event, data } = update as { event: string; data: any };
+                        sendMessage(event, data);
+                    } else {
+                        // If no message, wait 2 seconds before checking again
+                        // This saves API calls and money
+                        await new Promise((resolve) => setTimeout(resolve, 2000));
+                    }
+                }
+            } catch (err) {
+                console.error("SSE Stream Error:", err);
+            }
         },
     });
 
