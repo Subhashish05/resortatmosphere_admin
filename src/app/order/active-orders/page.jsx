@@ -33,11 +33,18 @@ export default function ActiveOrders() {
 	useEffect(() => {
 		const eventSource = new EventSource('/api/sse');
 
-		eventSource.addEventListener('order_update', () => {
-			queryClient.invalidateQueries(['activeOrderList']);
+		eventSource.addEventListener('order_update', (event) => {
+			console.log('Real-time update received from Redis via SSE:', event.data);
+			queryClient.invalidateQueries({ queryKey: ['activeOrders'] });
 		});
+
+		eventSource.onerror = (error) => {
+			console.error('SSE Connection Error:', error);
+			eventSource.close();
+		};
+
 		return () => eventSource.close();
-	}, []);
+	}, [queryClient]);
 
 	const orders = data?.orders || [];
 	const totalPages = data?.totalPages || 1;

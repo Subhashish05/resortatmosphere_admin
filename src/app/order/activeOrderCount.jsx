@@ -18,22 +18,29 @@ const fetchActiveOrderCount = async () => {
 };
 
 export default function ActiveOrderCount() {
-    const queryClient = useQueryClient();
+	const queryClient = useQueryClient();
 
 	const { data, isLoading } = useQuery({
 		queryKey: ['activeOrderList'],
 		queryFn: fetchActiveOrderCount,
-        staleTime: 60 * 1000,
+		staleTime: 60 * 1000,
 	});
 
-    useEffect(() => {
-        const eventSource = new EventSource('/api/sse');
+	useEffect(() => {
+		const eventSource = new EventSource('/api/sse');
 
-        eventSource.addEventListener('order_update', () => {
-           queryClient.invalidateQueries(['activeOrderList']);
-        })
-        return () => eventSource.close();
-    }, [])
+		eventSource.addEventListener('order_update', (event) => {
+			console.log('Real-time update received from Redis via SSE:', event.data);
+			queryClient.invalidateQueries({ queryKey: ['activeOrderList'] });
+		});
+
+		eventSource.onerror = (error) => {
+			console.error('SSE Connection Error:', error);
+			eventSource.close();
+		};
+
+		return () => eventSource.close();
+	}, [queryClient]);
 
 	return (
 		<div className="flex items-center justify-center">
