@@ -79,7 +79,7 @@ export default function Cart() {
 				addNotice('Order placed successfully!');
 
 				queryClient.invalidateQueries(['activeOrderList']);
-				setIsVisible(false)
+				setIsVisible(false);
 
 				// Clear the form and list
 				setOrderList([]);
@@ -237,13 +237,18 @@ export default function Cart() {
 							</div>
 							<div className="relative mb-3">
 								<input
-									type="text"
+									type="tel"
+									inputMode="numeric"
+									pattern="[0-9]*"
 									name="mobile_number"
 									id="mobile_number"
-									placeholder=""
+									placeholder=" "
 									className="peer border border-theme p-2 rounded-sm outline-0 w-full"
 									value={mobileNumber}
-									onChange={(e) => setMobileNumber(e.target.value)}
+									onChange={(e) => {
+										const val = e.target.value.replace(/\D/g, '');
+										setMobileNumber(val);
+									}}
 								/>
 								<label
 									htmlFor="mobile_number"
