@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { FaArrowLeft, FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
 import OrderCard from './orderCard';
@@ -22,12 +22,22 @@ const fetchActiveOrder = async (page = 1) => {
 export default function ActiveOrders() {
 	const router = useRouter();
 	const [page, setPage] = useState(1);
+	const queryClient = useQueryClient();
 
 	const { data, isLoading } = useQuery({
 		queryKey: ['activeOrders', page],
 		queryFn: () => fetchActiveOrder(page),
 		staleTime: 60 * 100,
 	});
+
+	useEffect(() => {
+		const eventSource = new EventSource('/api/sse');
+
+		eventSource.addEventListener('order_update', () => {
+			queryClient.invalidateQueries(['activeOrderList']);
+		});
+		return () => eventSource.close();
+	}, []);
 
 	const orders = data?.orders || [];
 	const totalPages = data?.totalPages || 1;

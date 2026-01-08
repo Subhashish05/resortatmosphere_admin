@@ -29,9 +29,8 @@ export default function ActiveOrderCount() {
     useEffect(() => {
         const eventSource = new EventSource('/api/sse');
 
-        eventSource.addEventListener('order_update', (e) => {
-            const data = JSON.parse(e.data);
-            if(data.new) queryClient.invalidateQueries(['activeOrderList']);
+        eventSource.addEventListener('order_update', () => {
+           queryClient.invalidateQueries(['activeOrderList']);
         })
         return () => eventSource.close();
     }, [])
