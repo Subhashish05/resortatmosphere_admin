@@ -99,7 +99,7 @@ export default function Cart() {
 			<section
 				className={`${
 					isVisible ? 'flex' : 'hidden'
-				} md:flex flex-col w-full md:w-2/5 bg-mid border border-myBorder rounded-sm fixed md:sticky h-[calc(100vh-16px)] md:h-[calc(100vh-52px)] top-2 md:top-13 right-0 z-5`}
+				} md:flex flex-col w-full md:w-2/5 bg-mid border border-myBorder rounded-sm fixed md:sticky h-[calc(100vh-16px)] md:h-[calc(100vh-52px)] top-2 md:top-13 right-0 z-25 md:5`}
 			>
 				<div className="relative py-1 border-b border-myBorder md:hidden">
 					<h2 className="text-xl md:text-3xl text-center">Order Cart</h2>
@@ -185,14 +185,12 @@ export default function Cart() {
 				{/* Trigger Button */}
 				<div className="flex justify-around">
 					<button
-						disabled={orderList.length === 0}
 						popoverTarget="confirmOrder"
 						className="w-[calc(100%-1rem)] m-2 px-2 py-2 rounded-sm shadow text-sm lg:text-base text-center bg-blue-500 text-white font-medium active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
 					>
 						Place Order
 					</button>
 					<button
-						disabled={orderList.length === 0}
 						popoverTarget="confirmOrder"
 						className="w-[calc(100%-1rem)] m-2 px-2 py-2 rounded-sm shadow text-sm lg:text-base text-center bg-blue-500 text-white font-medium active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
 					>
