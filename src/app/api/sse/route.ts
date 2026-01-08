@@ -3,6 +3,7 @@ import { NextRequest } from 'next/server';
 import { redis } from '@/lib/redis';
 
 export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
     const encoder = new TextEncoder();
@@ -19,29 +20,41 @@ export async function GET(req: NextRequest) {
             }, 15000);
 
             let isAborted = false;
+
             req.signal.addEventListener('abort', () => {
                 isAborted = true;
                 clearInterval(heartbeat);
-                controller.close();
+                try {
+                    controller.close();
+                } catch (e) {}
             });
+
+            sendMessage('status', { message: 'Connected to Global Feed' });
 
             try {
                 while (!isAborted) {
-                    // Check Redis for a message
-                    const update = await redis.lpop('app_updates');
+                    // Using lpop since brpop isn't supported in the Upstash HTTP SDK
+                    const result = await redis.lpop('app_updates');
 
-                    if (update) {
-                        // Type casting for safety
-                        const { event, data } = update as { event: string; data: any };
-                        sendMessage(event, data);
-                    } else {
-                        // If no message, wait 2 seconds before checking again
-                        // This saves API calls and money
-                        await new Promise((resolve) => setTimeout(resolve, 2000));
+                    if (result && !isAborted) {
+                        // Upstash usually returns the object directly if it was pushed as one
+                        const payload = typeof result === 'string' 
+                            ? JSON.parse(result) 
+                            : result;
+
+                        sendMessage(payload.event, payload.data);
+                        
+                        // After finding a message, check immediately for the next one
+                        continue; 
                     }
+
+                    // If no message, wait a very short time (100ms - 200ms)
+                    // This provides near-instant response without hitting rate limits
+                    await new Promise((resolve) => setTimeout(resolve, 200));
                 }
             } catch (err) {
-                console.error("SSE Stream Error:", err);
+                console.error("SSE Redis Error:", err);
+                if (!isAborted) await new Promise(r => setTimeout(r, 2000));
             }
         },
     });
