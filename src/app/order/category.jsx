@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { FaXmark } from 'react-icons/fa6';
 
 const fetchCategories = async () => {
-    const res = await fetch(`/api/v1/category`);
+    const res = await fetch(`/api/category`);
     if (!res.ok) throw new Error('Failed to fetch');
     const json = await res.json();
     return json.data;

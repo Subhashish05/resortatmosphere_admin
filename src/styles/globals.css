@@ -107,7 +107,6 @@ body.dark .shimmer::after {
 }
 nav + main {
 	width: 100%;
-	transition: all 500ms ease;
 }
 a {
 	cursor: pointer;

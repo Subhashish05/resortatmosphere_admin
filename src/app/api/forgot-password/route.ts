@@ -100,7 +100,6 @@ export async function PATCH(req: NextRequest) {
 
     return NextResponse.json({ success: true, message: 'Password reset successful.' }, { status: 200 });
   } catch (err: unknown) {
-    console.error('Error resetting password:', err);
     const message = err instanceof Error ? err.message : 'Server error';
     return NextResponse.json({ success: false, message }, { status: 500 });
   }

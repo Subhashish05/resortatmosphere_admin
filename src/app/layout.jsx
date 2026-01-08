@@ -18,10 +18,10 @@ export default async function RootLayout({ children }) {
 	return (
 		<html lang="en">
 			<head>
-				<title>Trading Tools</title>
+				<title>Admin Panel | Resort Atmosphere</title>
 				<meta
 					name="description"
-					content="Powerful trading tools to track markets, analyze charts, and make smarter investment decisions in real time."
+					content="Manage resort operations, guest bookings, and atmosphere settings through the centralized Resort Atmosphere admin dashboard."
 				/>
 				<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 			</head>

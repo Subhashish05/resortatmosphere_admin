@@ -24,7 +24,7 @@ export default function ResetPasswordPage() {
 		const checkToken = async () => {
 			setLoading(true);
 			try {
-				const res = await fetch(`/api/v1/forgot-password/${token}`);
+				const res = await fetch(`/api/forgot-password/${token}`);
 				const data = await res.json();
 				if (data.success) {
 					setIsAuth(true);
@@ -56,7 +56,7 @@ export default function ResetPasswordPage() {
 
 		setError('');
 		try {
-			const res = await fetch(`/api/v1/forgot-password`, {
+			const res = await fetch(`/api/forgot-password`, {
 				method: 'PATCH',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ email, password }),

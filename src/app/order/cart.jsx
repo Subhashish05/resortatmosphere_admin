@@ -4,10 +4,13 @@ import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
 import { FaClipboardCheck, FaClipboardList, FaMinus, FaPlus } from 'react-icons/fa6';
 import { HiOutlineXMark } from 'react-icons/hi2';
+import ActiveOrderCount from './activeOrderCount';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function Cart() {
 	const { userContext, orderList, setOrderList } = useAppContext();
 	const { addNotice } = useNotice();
+	const queryClient = useQueryClient();
 
 	// order details
 	const [fullName, setFullName] = useState('');
@@ -45,14 +48,13 @@ export default function Cart() {
 	const totalItems = orderList.reduce((acc, item) => acc + item.quantity, 0);
 	const cartTotal = orderList.reduce((acc, item) => acc + item.quantity * item.amount, 0);
 
-
 	const handlePlaceOrder = async () => {
 		const orderDetails = {
 			items: orderList,
 			totalItems,
 			cartTotal,
 		};
-	
+
 		const payload = {
 			fullname: fullName,
 			mobile: mobileNumber,
@@ -63,9 +65,9 @@ export default function Cart() {
 			captain_name: userContext.name,
 			status: 'active',
 		};
-	
+
 		try {
-			const response = await fetch('/api/v1/orders', {
+			const response = await fetch('/api/orders', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(payload),
@@ -73,6 +75,8 @@ export default function Cart() {
 
 			if (response.ok) {
 				addNotice('Order placed successfully!');
+
+				queryClient.invalidateQueries(['activeOrderList']);
 
 				// Clear the form and list
 				setOrderList([]);
@@ -93,15 +97,15 @@ export default function Cart() {
 				<div className="w-1/2">
 					<Link
 						href={'/order/active-orders'}
-						className="flex justify-center items-center gap-2 m-2 px-2 py-1 bg-emerald-500 rounded-sm shadow text-sm lg:text-base text-center text-black"
+						className="flex justify-center items-center gap-2 m-2 px-2 py-1 bg-emerald-500 rounded-sm shadow text-sm lg:text-base text-center text-black active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
 					>
-						<FaClipboardList /> Active Orders ({})
+						<FaClipboardList /> <ActiveOrderCount/>
 					</Link>
 				</div>
 				<div className="w-1/2">
 					<Link
 						href={'/order/all-orders'}
-						className="flex justify-center items-center gap-2 m-2 px-2 py-1 bg-light rounded-sm shadow text-sm lg:text-base text-center"
+						className="flex justify-center items-center gap-2 m-2 px-2 py-1 bg-main text-dark rounded-sm shadow text-sm lg:text-base text-center active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
 					>
 						<FaClipboardCheck /> All Orders
 					</Link>
@@ -270,19 +274,24 @@ export default function Cart() {
 						<span>To Be Paid</span>
 						<span className="font-bold">₹{cartTotal.toFixed(2)}</span>
 					</p>
-					<div className="flex justify-end gap-2 text-white">
+					<div className="flex justify-around gap-2 text-white">
 						<button
-							popoverTarget="confirmOrder"
-							popoverTargetAction="hide"
-							className="px-4 py-2 bg-red-600 rounded"
+							className="w-2/5 px-4 py-2 bg-red-600 rounded"
+							onClick={() => {
+								setFullName('');
+								setMobileNumber('');
+								setTableNumber('');
+								setKotRemarks('');
+								setBillRemarks('');
+							}}
 						>
-							Cancel
+							Reset
 						</button>
 						<button
 							onClick={handlePlaceOrder}
 							popoverTarget="confirmOrder"
 							popoverTargetAction="hide"
-							className="px-4 py-2 bg-green-600 rounded"
+							className="w-2/5 px-4 py-2 bg-green-600 rounded"
 						>
 							Confirm
 						</button>

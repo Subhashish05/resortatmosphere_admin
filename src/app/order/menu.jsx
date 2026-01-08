@@ -6,7 +6,7 @@ import { BiFoodTag } from 'react-icons/bi';
 
 const fetchMenu = async () => {
 	try {
-		const res = await fetch(`/api/v1/menu`);
+		const res = await fetch(`/api/menu`);
 		if (!res.ok) {
 			throw new Error(`Error ${res.status}: Failed to fetch menu`);
 		}
@@ -50,13 +50,13 @@ export default function Menu({ search, category }) {
 				// Update quantity of existing item
 				return currentList.map((item, index) =>
 					index === existingItemIndex
-						? { ...item, quantity: item.quantity + 1, amount: (item.quantity + 1) * price }
+						? { ...item, quantity: item.quantity + 1, amount: (item.quantity + 1) * price, isServed: false }
 						: item
 				);
 			}
 
 			// Add new item (Immutable append)
-			return [...currentList, { item: name, quantity: 1, amount: price }];
+			return [...currentList, { item: name, quantity: 1, amount: price, isServed: false }];
 		});
 	};
 
@@ -68,7 +68,7 @@ export default function Menu({ search, category }) {
 				  ))
 				: filteredMenu.map((menu) => (
 						<div key={menu.id} onClick={() => addMenuItem(menu.name, menu.price)}>
-							<div className="flex flex-col h-full bg-linear-0 from-98% from-light to-10% to-highlight shadow rounded-sm overflow-hidden cursor-pointer relative active:brightness-90 transition-all select-none">
+							<div className="flex flex-col h-full bg-linear-0 from-98% from-light to-10% to-highlight shadow rounded-sm overflow-hidden cursor-pointer relative active:brightness-90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all select-none">
 								<BiFoodTag
 									className={`absolute top-0 right-0 size-6 ${
 										menu.isVeg ? 'fill-green-500' : 'fill-red-500'

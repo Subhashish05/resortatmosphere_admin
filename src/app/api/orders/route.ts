@@ -1,6 +1,19 @@
+import { eventBus } from '@/lib/events';
 import { db } from '@/lib/mysqldb';
-import { ResultSetHeader } from 'mysql2';
+import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import { NextRequest, NextResponse } from 'next/server';
+
+interface OrderRow extends RowDataPacket {
+	id: number;
+	fullname: string;
+	mobile: string;
+	table_no: string;
+	kot_remark: string;
+	bill_remark: string;
+	order_details: string | object;
+	captain_name: string;
+	status: string;
+}
 
 export async function GET(request: NextRequest) {
 	try {
@@ -31,9 +44,14 @@ export async function GET(request: NextRequest) {
 
 		// Execute both queries
 		// Note: we spread values for count, but add limit/offset for the main query
-		const [orders] = await db.query(query, [...values, limit, offset]);
-		const [totalResult] = await db.query(countQuery, values);
+		const [rows] = await db.query<OrderRow[]>(query, [...values, limit, offset]);
+		const orders = rows.map((order: any) => ({
+			...order,
+			order_details:
+				typeof order.order_details === 'string' ? JSON.parse(order.order_details) : order.order_details,
+		}));
 
+		const [totalResult] = await db.query(countQuery, values);
 		const totalRows = (totalResult as any)[0].total;
 		const totalPages = Math.ceil(totalRows / limit);
 
@@ -90,6 +108,8 @@ export async function POST(request: NextRequest) {
 
 		const [result] = await db.query<ResultSetHeader>(query, values);
 
+		eventBus.emit('ORDER_CHANGED', result.insertId)
+
 		return NextResponse.json(
 			{
 				success: true,
@@ -101,5 +121,18 @@ export async function POST(request: NextRequest) {
 	} catch (error) {
 		console.error('Database Error:', error);
 		return NextResponse.json({ error: 'Failed to place order' }, { status: 500 });
+	}
+}
+
+export async function PATCH(request: NextRequest) {
+	try {
+		const { order_details, id } = (await request.json()) as { order_details: string; id: number };
+		await db.query('UPDATE orders set order_details = ? where id = ?', [JSON.stringify(order_details), id]);
+
+		return NextResponse.json({ success: true }, { status: 200 });
+	} catch (error) {
+		console.error(error);
+		const message = error instanceof Error ? error.message : 'Server error';
+		return NextResponse.json({ success: false, message }, { status: 500 });
 	}
 }

@@ -29,7 +29,7 @@ export default function ProfilePage() {
 		e.preventDefault();
 		setLoading(true);
 		try {
-			const res = await fetch('/api/v1/user', {
+			const res = await fetch('/api/user', {
 				method: 'PATCH',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ id: userContext.id, name, email, password }),
