@@ -35,7 +35,7 @@ export default function NoticeCard({ notice, onClose }) {
     return (
         <section
             ref={containerRef}
-            className={`pointer-events-auto relative p-4 w-80 rounded-md shadow-xl border backdrop-blur-md
+            className={`pointer-events-auto relative px-4 py-2 w-80 rounded-md shadow-xl border backdrop-blur-md
                 ${notice.isError ? 'bg-red-50/90 text-red-700 border-red-200' : 'bg-emerald-50/90 text-emerald-700 border-emerald-200'}`}
         >
             <div className="flex justify-between items-start gap-2">

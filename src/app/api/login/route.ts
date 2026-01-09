@@ -9,6 +9,7 @@ interface Auth extends RowDataPacket {
 	name: string;
 	email: string;
 	password: string;
+	role: string;
 	isVerified: boolean;
 }
 
@@ -51,6 +52,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 				name: user.name,
 				email: user.email,
 				password: password,
+				role: user.role,
 			},
 			process.env.JWT_SECRET as string,
 			{ expiresIn: '30d' }
@@ -65,16 +67,19 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 					name: user.name,
 					email: user.email,
 					password: password,
+					role: user.role,
 				},
 			},
 			{ status: 200 }
 		);
 
+		const isProd = process.env.NODE_ENV === 'production';
+
 		response.cookies.set('atmosphere_auth_token', token, {
 			httpOnly: true,
-			secure: true,
-			sameSite: 'strict',
-			maxAge: 60 * 60 * 24 * 30, // 30 days
+			secure: isProd,
+			sameSite: isProd ? 'strict' : 'lax',
+			maxAge: 60 * 60 * 24 * 30,
 			path: '/',
 		});
 

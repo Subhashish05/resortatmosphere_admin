@@ -98,8 +98,8 @@ export default function Cart() {
 		<>
 			<section
 				className={`${
-					isVisible ? 'flex' : 'hidden'
-				} md:flex flex-col w-full md:w-2/5 bg-mid border border-myBorder rounded-sm fixed md:sticky h-[calc(100vh-16px)] md:h-[calc(100vh-52px)] top-2 md:top-13 right-0 z-25 md:5`}
+					isVisible ? 'right-0' : '-right-full'
+				} flex flex-col w-full md:w-2/5 bg-mid border border-myBorder rounded-sm fixed md:sticky h-[calc(100vh-16px)] md:h-[calc(100vh-52px)] top-2 md:top-13 z-25 md:z-5 transition-right duration-500`}
 			>
 				<div className="relative py-1 border-b border-myBorder md:hidden">
 					<h2 className="text-xl md:text-3xl text-center">Order Cart</h2>
@@ -185,14 +185,16 @@ export default function Cart() {
 				{/* Trigger Button */}
 				<div className="flex justify-around">
 					<button
+						disabled={orderList.length === 0}
 						popoverTarget="confirmOrder"
-						className="w-[calc(100%-1rem)] m-2 px-2 py-2 rounded-sm shadow text-sm lg:text-base text-center bg-blue-500 text-white font-medium active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+						className="w-[calc(100%-1rem)] m-2 px-2 py-2 rounded-sm shadow text-sm lg:text-base text-center bg-blue-600 text-white font-medium active:scale-[0.98] disabled:cursor-not-allowed transition-all"
 					>
 						Place Order
 					</button>
 					<button
+						disabled={orderList.length === 0}
 						popoverTarget="confirmOrder"
-						className="w-[calc(100%-1rem)] m-2 px-2 py-2 rounded-sm shadow text-sm lg:text-base text-center bg-blue-500 text-white font-medium active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+						className="w-[calc(100%-1rem)] m-2 px-2 py-2 rounded-sm shadow text-sm lg:text-base text-center bg-blue-600 text-white font-medium active:scale-[0.98] disabled:cursor-not-allowed transition-all"
 					>
 						Print Bill
 					</button>
@@ -321,22 +323,24 @@ export default function Cart() {
 				</section>
 			</section>
 
-			<div className="flex items-center justify-between md:hidden fixed bottom-0 left-0 py-4 px-3 bg-light z-3 w-full gap-4">
-				<div className="flex items-center justify-center">
-					<p className="text-2xl md:text-4xl">TOTAL :</p>
-					<div className="text-center ml-3 w-20">
-						<p className="text-right">₹ {cartTotal}</p>
-						<p className="text-xs font-light text-muted">Total Item: {totalItems}</p>
+			{cartTotal !== 0 && (
+				<div className="flex items-center justify-between md:hidden fixed bottom-0 left-0 py-4 px-3 bg-neutral-900 text-neutral-100 z-3 w-full gap-4 border-t border-myBorder">
+					<div className="flex items-center justify-center">
+						<p className="text-2xl md:text-4xl">TOTAL :</p>
+						<div className="text-center ml-3 w-20">
+							<p className="text-right">₹ {cartTotal}</p>
+							<p className="text-xs font-light text-muted">Total Item: {totalItems}</p>
+						</div>
 					</div>
+					<button
+						type="button"
+						className="bg-neutral-50 text-neutral-950 px-5 py-2 rounded-full shadow"
+						onClick={() => setIsVisible(true)}
+					>
+						View Cart
+					</button>
 				</div>
-				<button
-					type="button"
-					className="bg-main text-dark px-5 py-2 rounded-full shadow"
-					onClick={() => setIsVisible(true)}
-				>
-					View Cart
-				</button>
-			</div>
+			)}
 		</>
 	);
 }

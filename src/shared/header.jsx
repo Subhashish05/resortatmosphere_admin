@@ -74,7 +74,7 @@ export default function Header() {
 	const displayName = lastSegment.replace(/-/g, ' '); // Replace hyphens with spaces
 
 	return (
-		<header className="font-head bg-mid py-2 px-5 flex items-center justify-between h-12 w-full sticky top-0 left-0 z-20 shadow">
+		<header className="font-head bg-light py-2 px-5 flex items-center justify-between h-12 w-full sticky top-0 left-0 z-20">
 			<div>
 				{isCollapse ? (
 					<LuPanelLeftOpen
@@ -129,6 +129,7 @@ export default function Header() {
 							<div className="bg-light flex items-center justify-between p-2 text-base">
 								<div className="w-full ps-2 text-base">
 									<p className="text-center">{userContext?.name}</p>
+									<p className='text-center text-muted text-[10px] leading-1 uppercase tracking-wider'>({userContext?.role})</p>
 								</div>
 							</div>
 							<ul className="text-xs md:text-sm">

@@ -20,6 +20,7 @@ const fetchMenu = async () => {
 
 export default function Menu({ search, category }) {
 	const { setOrderList } = useAppContext();
+
 	const { data, isLoading } = useQuery({
 		queryKey: ['menu'],
 		queryFn: fetchMenu,
@@ -61,14 +62,14 @@ export default function Menu({ search, category }) {
 	};
 
 	return (
-		<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-1 md:gap-2 lg:gap-3 px-2">
+		<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-2 lg:gap-3 pt-2 px-2 pb-10 md:pb-0">
 			{isLoading
 				? Array.from({ length: 12 }).map((_, i) => (
 						<div key={i} className="h-51 animate-pulse bg-light w-full text-center"></div>
 				  ))
 				: filteredMenu.map((menu) => (
 						<div key={menu.id} onClick={() => addMenuItem(menu.name, menu.price)}>
-							<div className="flex flex-col h-full bg-linear-0 from-98% from-light to-10% to-highlight shadow rounded-sm overflow-hidden cursor-pointer relative active:brightness-90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all select-none">
+							<div className="flex flex-col h-full bg-light shadow rounded-sm overflow-hidden cursor-pointer relative active:brightness-90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all select-none">
 								<BiFoodTag
 									className={`absolute top-0 right-0 size-6 ${
 										menu.isVeg ? 'fill-green-500' : 'fill-red-500'
@@ -81,20 +82,20 @@ export default function Menu({ search, category }) {
 									width={600}
 									className="h-32 w-auto object-cover mx-auto shrink-0"
 									draggable="false"
-									loading="lazy"
+									loading='lazy'
 								/>
 
 								{/* Title: flex-grow ensures this area takes up available space */}
-								<div className="grow flex flex-col justify-center">
-									<p className="text-sm lg:text-base font-light font-body text-center mt-0.5 px-1 leading-tight tracking-wide">
+								<div className="grow flex flex-col justify-center pb-1">
+									<p className="text-sm lg:text-base font-light font-body text-center mt-0.5 px-1 leading-[1.1] tracking-wide">
 										{menu.name}
 									</p>
 								</div>
 
 								{/* Footer section: Stays at the bottom */}
 								<div className="mt-auto mb-1">
-									<p className="text-center font-bold mb-0.5">₹{menu.price}</p>
-									<p className="text-muted text-center text-xs min-h-4 px-1 font-light uppercase">
+									<p className="text-center font-bold leading-6">₹ {menu.price}</p>
+									<p className="text-muted text-center text-[10px] md:text-xs min-h-4 px-1 font-light uppercase">
 										{menu.description == null ? 'Normal' : menu.description}
 									</p>
 								</div>

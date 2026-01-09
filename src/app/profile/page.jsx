@@ -1,6 +1,7 @@
 'use client';
 
 import { useAppContext } from '@/context/context';
+import { useNotice } from '@/context/noticeContext';
 import { useEffect, useState } from 'react';
 import NoticeCard from '@/components/noticecard';
 import { FaUserCircle } from 'react-icons/fa';
@@ -8,9 +9,7 @@ import {LuEye, LuEyeOff} from 'react-icons/lu';
 
 export default function ProfilePage() {
 	const { userContext, setUserContext } = useAppContext();
-
-	const [message, setMessage] = useState('');
-	const [error, setError] = useState(false);
+	const { addNotice } = useNotice();
 
 	const [name, setName] = useState(userContext.name);
 	const [email, setEmail] = useState(userContext.email);
@@ -38,19 +37,15 @@ export default function ProfilePage() {
 			const data = await res.json();
 			if (data.success) {
 				setUserContext({ ...userContext, name, email, password });
-				setEditing(false);
-				setError(false);
-				setMessage('Profile updated successfully');
+				addNotice('Profile updated successfully');
 				sessionStorage.setItem('user', JSON.stringify({ ...userContext, name, email, password }));
 			} else {
 				console.error('Update failed:', data);
-				setError(true);
-				setMessage('Profile updated fail');
+				addNotice('Profile updated fail', true);
 			}
 		} catch (err) {
 			console.error('Error updating user:', err);
-			setError(true);
-			setMessage('Something went wrong!');
+			addNotice('Profile updated fail', true);
 		} finally {
 			setLoading(false);
 		}
@@ -58,15 +53,11 @@ export default function ProfilePage() {
 
 	return (
 		<>
-			{message !== '' && <NoticeCard isError={error} notice={message} />}
 			<div className="p-4">
-				<h1 className="text-center text-3xl font-semibold text-theme bg-light mb-4 rounded-sm shadow border-t border-highlight py-3">
-					Profile
-				</h1>
 
 				<section className="flex justify-center items-center min-h-100 mt-3">
 					<div className="shadow rounded-sm bg-light overflow-hidden flex flex-col items-center w-full max-w-md">
-						<div className="w-full flex justify-center items-center bg-light pt-6">
+						<div className="w-full flex justify-center items-center pt-6">
 							<FaUserCircle className="text-main text-7xl" />
 						</div>
 

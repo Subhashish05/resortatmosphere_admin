@@ -9,9 +9,10 @@ const AppContext = createContext();
 
 const nullData = {
 	id: null,
-	email: null,
 	name: null,
 	password: null,
+	email: null,
+	role: null,
 };
 export const ContextProvider = ({ children }) => {
 	const pathname = usePathname();

@@ -21,12 +21,12 @@ export default function Navigation() {
 		<nav
 			className={`${
 				isCollapse ? '-left-30 collapsed' : 'left-0'
-			} bg-light h-[calc(100vh-48px)] flex flex-col items-center transition-[left] duration-500 fixed top-12 w-15 z-51`}
+			} bg-light h-[calc(100vh-48px)] flex flex-col items-center transition-[left] duration-500 fixed top-12 w-15 z-51 border-r border-myBorder`}
 		>
 			<Link
 				href={'/'}
-				className={`my-4 text-center flex flex-col items-center text-xs ${
-					pathname == '/' ? 'text-theme' : 'text-muted'
+				className={`w-full py-2 my-2 text-center flex flex-col items-center text-xs ${
+					pathname == '/' ? 'text-theme bg-mid border border-l-0 border-r-0' : 'text-muted'
 				}`}
 				onClick={handleNavClick}
 			>
@@ -35,8 +35,8 @@ export default function Navigation() {
 			</Link>
 			<Link
 				href={'/order'}
-				className={`my-4 text-center flex flex-col items-center text-xs ${
-					pathname == '/order' ? 'text-theme' : 'text-muted'
+				className={`w-full py-2 my-2 text-center flex flex-col items-center text-xs ${
+					pathname == '/order' ? 'text-theme bg-mid border border-l-0 border-r-0' : 'text-muted'
 				}`}
 				onClick={handleNavClick}
 			>
@@ -45,8 +45,8 @@ export default function Navigation() {
 			</Link>
 			<Link
 				href={'/menu'}
-				className={`my-4 text-center flex flex-col items-center text-xs ${
-					pathname == '/menu' ? 'text-theme' : 'text-muted'
+				className={`w-full py-2 my-2 text-center flex flex-col items-center text-xs ${
+					pathname == '/menu' ? 'text-theme bg-mid border border-l-0 border-r-0' : 'text-muted'
 				}`}
 				onClick={handleNavClick}
 			>
@@ -55,8 +55,8 @@ export default function Navigation() {
 			</Link>
 			<Link
 				href={'/staff'}
-				className={`my-4 text-center flex flex-col items-center text-xs ${
-					pathname == '/staff' ? 'text-theme' : 'text-muted'
+				className={`w-full py-2 my-2 text-center flex flex-col items-center text-xs ${
+					pathname == '/staff' ? 'text-theme bg-mid border border-l-0 border-r-0' : 'text-muted'
 				}`}
 				onClick={handleNavClick}
 			>
@@ -65,8 +65,8 @@ export default function Navigation() {
 			</Link>
 			<Link
 				href={'/booking'}
-				className={`my-4 text-center flex flex-col items-center text-xs ${
-					pathname == '/booking' ? 'text-theme' : 'text-muted'
+				className={`w-full py-2 my-2 text-center flex flex-col items-center text-xs ${
+					pathname == '/booking' ? 'text-theme bg-mid border border-l-0 border-r-0' : 'text-muted'
 				}`}
 				onClick={handleNavClick}
 			>
@@ -75,8 +75,8 @@ export default function Navigation() {
 			</Link>
 			<Link
 				href={'/contact'}
-				className={`my-4 text-center flex flex-col items-center text-xs ${
-					pathname == '/contact' ? 'text-theme' : 'text-muted'
+				className={`w-full py-2 my-2 text-center flex flex-col items-center text-xs ${
+					pathname == '/contact' ? 'text-theme bg-mid border border-l-0 border-r-0' : 'text-muted'
 				}`}
 				onClick={handleNavClick}
 			>
@@ -85,8 +85,8 @@ export default function Navigation() {
 			</Link>
 			<Link
 				href={'/gallery'}
-				className={`my-4 text-center flex flex-col items-center text-xs ${
-					pathname == '/gallery' ? 'text-theme' : 'text-muted'
+				className={`w-full py-2 my-2 text-center flex flex-col items-center text-xs ${
+					pathname == '/gallery' ? 'text-theme bg-mid border border-l-0 border-r-0' : 'text-muted'
 				}`}
 				onClick={handleNavClick}
 			>
@@ -95,8 +95,8 @@ export default function Navigation() {
 			</Link>
 			<Link
 				href={'/review'}
-				className={`my-4 text-center flex flex-col items-center text-xs ${
-					pathname == '/review' ? 'text-theme' : 'text-muted'
+				className={`w-full py-2 my-2 text-center flex flex-col items-center text-xs ${
+					pathname == '/review' ? 'text-theme bg-mid border border-l-0 border-r-0' : 'text-muted'
 				}`}
 				onClick={handleNavClick}
 			>
