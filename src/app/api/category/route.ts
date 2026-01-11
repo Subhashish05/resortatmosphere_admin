@@ -7,7 +7,6 @@ interface Category extends RowDataPacket {
 	name: string;
 }
 
-// ---- GET: fetch user by id ----
 export async function GET() {
 	try {
 		const [rows] = await db.query<Category[]>('SELECT * FROM category');

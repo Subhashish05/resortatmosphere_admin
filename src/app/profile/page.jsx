@@ -68,7 +68,7 @@ export default function ProfilePage() {
 										type="text"
 										value={name}
 										onChange={(e) => setName(e.target.value)}
-										className="border border-myBorder rounded px-3 py-2"
+										className="border border-myBorder rounded px-3 py-2 outline-none focus:ring-1 focus:border-amber-200 ring-amber-200"
 										placeholder="Name"
 										required
 									/>
@@ -76,7 +76,7 @@ export default function ProfilePage() {
 										type="email"
 										value={email}
 										onChange={(e) => setEmail(e.target.value)}
-										className="border border-myBorder rounded px-3 py-2"
+										className="border border-myBorder rounded px-3 py-2 outline-none focus:ring-1 focus:border-amber-200 ring-amber-200"
 										placeholder="Email"
 										required
 									/>
@@ -87,7 +87,7 @@ export default function ProfilePage() {
 											onChange={(e) => setPassword(e.target.value)}
 											autoComplete="current-password"
 											placeholder="Password"
-											className="border border-myBorder rounded px-3 py-2 w-full"
+											className="border border-myBorder rounded px-3 py-2 outline-none focus:ring-1 focus:border-amber-200 ring-amber-200 w-full"
 										/>
 										<button
 											type="button"

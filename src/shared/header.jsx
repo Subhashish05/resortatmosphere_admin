@@ -89,7 +89,7 @@ export default function Header() {
 				)}
 			</div>
 
-			<div className="text-theme text-2xl flex items-center">
+			<div className="text-theme text-xl md:text-3xl flex items-center leading-0">
 				{pathname == '/' ? (
 					<Image
 						src="/img/logo.png"
@@ -100,7 +100,7 @@ export default function Header() {
 						loading="eager"
 					/>
 				) : (
-					<p className='uppercase font-semibold tracking-wide'>{displayName}</p>
+					<p className='uppercase font-light tracking-wide'>{displayName} Panel</p>
 				)}
 			</div>
 

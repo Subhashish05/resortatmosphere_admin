@@ -10,7 +10,6 @@ interface Auth extends RowDataPacket {
 	email: string;
 	password: string;
 	role: string;
-	isVerified: boolean;
 }
 
 interface LoginRequestBody {
@@ -33,10 +32,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
 		if (!user) {
 			return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
-		}
-
-		if (!user.isVerified) {
-			return NextResponse.json({ success: false, error: 'Account is not verified' }, { status: 403 });
 		}
 
 		const isPasswordCorrect = await bcrypt.compare(password, user.password);
